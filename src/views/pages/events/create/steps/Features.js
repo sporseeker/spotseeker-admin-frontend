@@ -136,8 +136,6 @@ const Features = ({
     }
   ]
 
-  
-
   return (
     <Fragment>
       {productData !== null ? (

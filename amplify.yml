@@ -3,10 +3,13 @@ frontend:
   phases:
     preBuild:
       commands:
-        - yarn install
+        - nvm install 16
+        - nvm use 16
+        - corepack enable || true
+        - yarn install --frozen-lockfile
     build:
       commands:
-        - NODE_OPTIONS=--openssl-legacy-provider yarn run build
+        - yarn build
   artifacts:
     baseDirectory: build
     files:
