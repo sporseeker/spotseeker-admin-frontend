@@ -46,6 +46,7 @@ export default class JwtService {
               this.isAlreadyFetchingAccessToken = false;
 
               // ** Update accessToken in localStorage
+              alert(r.data.accessToken);
               this.setToken(r.data.accessToken);
               this.setRefreshToken(r.data.refreshToken);
 
@@ -79,6 +80,8 @@ export default class JwtService {
   }
 
   getToken() {
+    alert("YAY");
+    console.log("Token:", localStorage.getItem(this.jwtConfig.storageTokenKeyName));
     return localStorage.getItem(this.jwtConfig.storageTokenKeyName);
   }
 

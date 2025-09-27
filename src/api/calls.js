@@ -25,11 +25,11 @@ TMApi.interceptors.response.use(
     const { response } = error
     // ** if (status === 401) {
     if (response && response.status === 401) {
-      localStorage.removeItem("userData")
-      window.location.reload()
+      // localStorage.removeItem("userData")
+      // window.location.reload()
     } else if (response && response.status === 403) {
-      localStorage.removeItem("userData")
-      window.location.reload()
+      // localStorage.removeItem("userData")
+      // window.location.reload()
     }
     return Promise.reject(error)
   }

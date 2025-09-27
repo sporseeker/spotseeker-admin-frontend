@@ -377,8 +377,7 @@ const ProductCreateWizard = ({ type, id }) => {
                 fontSize: 18,
                 textDecoration: "none"
               }}>
-              {Object.keys(errors).map((field) =>
-                errors[field].map((error, index) => (
+              {Object.keys(errors).map((field) => errors[field].map((error, index) => (
                   <li key={`${field}-${index}`}>
                     <span>{error}</span>
                   </li>
@@ -428,9 +427,7 @@ const ProductCreateWizard = ({ type, id }) => {
     } else {
       EventService.updateEvent(productData)
         .then((res) => {
-          Alert(res.data.message.toUpperCase(), "success").then(() =>
-            location.reload()
-          )
+          Alert(res.data.message.toUpperCase(), "success").then(() => location.reload())
           setLoading(false)
         })
         .catch((err) => {
