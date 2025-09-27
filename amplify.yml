@@ -3,13 +3,10 @@ frontend:
   phases:
     preBuild:
       commands:
-        - nvm install 16
-        - nvm use 16
-        - corepack enable || true
-        - yarn install --frozen-lockfile
+        - yarn install
     build:
       commands:
-        - yarn build
+        - yarn run build
   artifacts:
     baseDirectory: build
     files:
