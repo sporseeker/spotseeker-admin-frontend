@@ -23,8 +23,7 @@ export const authSlice = createSlice({
       //state[config.storageTokenKeyName] = action.payload[config.storageTokenKeyName]
       //state[config.storageRefreshTokenKeyName] = action.payload[config.storageRefreshTokenKeyName]
       localStorage.setItem('userData', JSON.stringify(action.payload.data))
-      alert(JSON.stringify(action.payload.data.token))
-      localStorage.setItem(config.storageTokenKeyName, JSON.stringify(action.payload.data.token))
+      localStorage.setItem(config.storageTokenKeyName, action.payload.data.token)
       // localStorage.setItem(config.storageTokenKeyName, JSON.stringify(action.payload.accessToken))
       // localStorage.setItem(config.storageRefreshTokenKeyName, JSON.stringify(action.payload.refreshToken))
     },

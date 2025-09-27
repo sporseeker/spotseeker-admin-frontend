@@ -10,12 +10,12 @@ const TMApi = axios.create({
   withCredentials: true
 })
 
-/*MraApi.interceptors.request.use(function (config) {
+TMApi.interceptors.request.use(function (config) {
   config.headers.Authorization = `Bearer ${localStorage.getItem(
     "accessToken"
-  )}`;
-  return config;
-});*/
+  )}`
+  return config
+})
 
 // ** Add request/response interceptor
 TMApi.interceptors.response.use(
