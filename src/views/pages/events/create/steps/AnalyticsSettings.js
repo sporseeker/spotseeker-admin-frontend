@@ -68,8 +68,7 @@ const AnalyticsSettings = ({ productData, setAnalytics }) => {
                     id={`platform_${index}`}
                     name={`platform_${index}`}
                     value={item.platform}
-                    onChange={e =>
-                      handleChange(index, 'platform', e.target.value)
+                    onChange={e => handleChange(index, 'platform', e.target.value)
                     }
                   >
                     <option
@@ -101,8 +100,7 @@ const AnalyticsSettings = ({ productData, setAnalytics }) => {
                     name={`pixel_code_${index}`}
                     placeholder="Enter Pixel / Tracking ID"
                     value={item.pixel_code}
-                    onChange={e =>
-                      handleChange(index, 'pixel_code', e.target.value)
+                    onChange={e => handleChange(index, 'pixel_code', e.target.value)
                     }
                   />
                 </Col>

@@ -408,6 +408,18 @@ export const eventTypeOpts = [
     label: "Family"
   },
   {
+    value: "tamil_dj",
+    label: "tamil dj"
+  },
+  {
+    value: "club",
+    label: "club"
+  },
+  {
+    value: "halloween",
+    label: "halloween"
+  },
+  {
     value: "other",
     label: "Other"
   }

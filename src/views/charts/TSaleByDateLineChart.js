@@ -7,7 +7,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { formatNumber } from '../../utility/Utils'
 
 const CustomTooltip = ({ active, payload }) => {
-  if (active && payload) {
+  if (active && payload && payload.length > 0 && payload[0] && payload[0].value !== undefined) {
     return (
       <div className='recharts-custom-tooltip'>
         <span>{`LKR ${formatNumber(payload[0].value)}.00`}</span>
