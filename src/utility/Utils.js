@@ -409,15 +409,15 @@ export const eventTypeOpts = [
   },
   {
     value: "tamil_dj",
-    label: "tamil dj"
+    label: "Tamil DJ"
   },
   {
     value: "club",
-    label: "club"
+    label: "Club"
   },
   {
     value: "halloween",
-    label: "halloween"
+    label: "Halloween"
   },
   {
     value: "other",
