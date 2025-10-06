@@ -55,7 +55,7 @@ const SendInvitations = () => {
       if (data.length > 0) {
         const cols = Object.keys(data[0]).map((key) => ({
           name: key,
-          selector: key
+          selector: (row) => row[key]
         }))
         setColumns(cols)
       }
