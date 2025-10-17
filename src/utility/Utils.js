@@ -426,6 +426,10 @@ export const eventTypeOpts = [
   {
     value: "rotaract",
     label: "Rotaract"
+  },
+  {
+    value: "air_experience",
+    label: "Air Experience"
   }
 ]
 
