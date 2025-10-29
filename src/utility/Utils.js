@@ -430,6 +430,10 @@ export const eventTypeOpts = [
   {
     value: "air_experience",
     label: "Air Experience"
+  },
+  {
+    value: "yacht",
+    label: "Yacht"
   }
 ]
 
