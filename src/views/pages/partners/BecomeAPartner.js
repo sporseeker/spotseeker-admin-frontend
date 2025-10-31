@@ -34,7 +34,7 @@ import IconInput from '@components/icon-input'
 import PartnershipAgreementsService from "@services/PartnershipAgreementsService"
 
 
-const ActionsDropdown = ({ row, onEdit }) => {
+const ActionsDropdown = ({ row, onEdit, isLastRow = false }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
   const toggle = () => setDropdownOpen(prevState => !prevState)
@@ -51,7 +51,7 @@ const ActionsDropdown = ({ row, onEdit }) => {
 
   return (
     <div style={{ width: '50px', display: 'flex', justifyContent: 'center' }}>
-      <Dropdown isOpen={dropdownOpen} toggle={toggle} direction="left">
+      <Dropdown isOpen={dropdownOpen} toggle={toggle} direction={isLastRow ? "up" : "left"}>
         <DropdownToggle
           tag="div"
           style={{
@@ -230,8 +230,14 @@ const BecomeAPartner = () => {
       return p
     }))
 
-    // In a real app you'd call an API here and optionally send email/whatsapp
+    
     closeSidebar()
+  }
+
+  let filteredItems = []
+  if (Array.isArray(partnerData)) {
+    // For server-side pagination, search on current page data only
+    filteredItems = filterText ? partnerData.filter(item => JSON.stringify(item).toLowerCase().indexOf(filterText.toLowerCase()) !== -1) : partnerData
   }
 
   const columns = [
@@ -239,19 +245,19 @@ const BecomeAPartner = () => {
       name: "ID",
       minWidth: "120px",
       sortable: true,
-      selector: (row) => row.id  
+      selector: (row) => row.id || 'N/A'
     },
     {
       name: "Email",
       minWidth: "200px",
       sortable: true,
-      selector: (row) => row.email
+      selector: (row) => row.email || 'N/A'
     },
     {
       name: "Phone",
       minWidth: "150px",
       sortable: true,
-      selector: (row) => row.mobile  
+      selector: (row) => row.mobile || 'N/A'
     },
     // {
     //   name: "Password",
@@ -326,7 +332,7 @@ const BecomeAPartner = () => {
     {
       name: "",
       width: "50px",
-      cell: (row) => <ActionsDropdown row={row} onEdit={openSidebar} />
+      cell: (row, index) => <ActionsDropdown row={row} onEdit={openSidebar} isLastRow={index === filteredItems.length - 1} />
     }
   ]
 
@@ -381,12 +387,6 @@ const BecomeAPartner = () => {
     link.setAttribute("href", encodeURI(csv))
     link.setAttribute("download", filename)
     link.click()
-  }
-
-  let filteredItems = []
-  if (Array.isArray(partnerData)) {
-    // For server-side pagination, search on current page data only
-    filteredItems = filterText ? partnerData.filter(item => JSON.stringify(item).toLowerCase().indexOf(filterText.toLowerCase()) !== -1) : partnerData
   }
 
   const subHeaderComponent = useMemo(() => {
