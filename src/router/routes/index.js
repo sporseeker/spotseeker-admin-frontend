@@ -16,6 +16,7 @@ import CoPilotEventOrganizers from './CoPilotEventOrganizers'
 import CoPilotPartnershipAgreements from './CoPilotPartnershipAgreements'
 import CoPilotEventRequsts from './CoPilotEventRequests'
 import CoPilotWithdrawals from './CoPilotWithdrawals'
+import CoPilotBecomeAPartner from './CoPilotBecomeAPartner'
 
 // ** Layouts
 import BlankLayout from '@layouts/BlankLayout'
@@ -43,7 +44,7 @@ const TemplateTitle = '%s - SpotSeeker'
 const DefaultRoute = '/dashboard'
 
 // ** Merge Routes
-const Routes = [...AuthenticationRoutes, ...DashboardRoutes, ...BookingRoutes, ...SalesRoutes, ...EventsRoutes, ...VenuesRoutes, ...UsersRoutes, ...SettingsRoutes, ...NotificationsRoutes, ...CoPilotEventOrganizers, ...CoPilotPartnershipAgreements, ...CoPilotEventRequsts, ...CoPilotWithdrawals, ...NewEventRequestsRoutes]
+const Routes = [...AuthenticationRoutes, ...DashboardRoutes, ...BookingRoutes, ...SalesRoutes, ...EventsRoutes, ...VenuesRoutes, ...UsersRoutes, ...SettingsRoutes, ...NotificationsRoutes, ...CoPilotEventOrganizers, ...CoPilotPartnershipAgreements, ...CoPilotEventRequsts, ...CoPilotWithdrawals, ...CoPilotBecomeAPartner, ...NewEventRequestsRoutes]
 
 const getRouteMeta = route => {
   if (isObjEmpty(route.element.props)) {
