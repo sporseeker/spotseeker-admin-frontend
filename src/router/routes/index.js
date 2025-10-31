@@ -11,7 +11,7 @@ import VenuesRoutes from './Venues'
 import UsersRoutes from './Users'
 import SettingsRoutes from './Settings'
 import NotificationsRoutes from './Notifications'
-import NewEventRequestsRoutes from './NewEventRequests'
+import NewEventRequestsRoutes from './CoPilotNewEventRequests'
 import CoPilotEventOrganizers from './CoPilotEventOrganizers'
 import CoPilotPartnershipAgreements from './CoPilotPartnershipAgreements'
 import CoPilotEventRequsts from './CoPilotEventRequests'
@@ -43,7 +43,7 @@ const TemplateTitle = '%s - SpotSeeker'
 const DefaultRoute = '/dashboard'
 
 // ** Merge Routes
-const Routes = [...AuthenticationRoutes, ...DashboardRoutes, ...BookingRoutes, ...SalesRoutes, ...EventsRoutes, ...VenuesRoutes, ...UsersRoutes, ...SettingsRoutes, ...NotificationsRoutes, ...CoPilotEventOrganizers, ...NewEventRequestsRoutes, ...CoPilotPartnershipAgreements, ...CoPilotEventRequsts, ...CoPilotWithdrawals]
+const Routes = [...AuthenticationRoutes, ...DashboardRoutes, ...BookingRoutes, ...SalesRoutes, ...EventsRoutes, ...VenuesRoutes, ...UsersRoutes, ...SettingsRoutes, ...NotificationsRoutes, ...CoPilotEventOrganizers, ...CoPilotPartnershipAgreements, ...CoPilotEventRequsts, ...CoPilotWithdrawals, ...NewEventRequestsRoutes]
 
 const getRouteMeta = route => {
   if (isObjEmpty(route.element.props)) {

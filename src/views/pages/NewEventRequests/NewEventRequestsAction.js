@@ -3,10 +3,10 @@ import { Button } from 'reactstrap'
 import { useImmer } from 'use-immer'
 import Wizard from "@components/wizard"
 import { useRef, useState } from 'react'
-import BasicDetails from './NewEventRequests/BasicDetails'
-import PackageDetails from './NewEventRequests/PackageDetails'
-import PromotionDetails from './NewEventRequests/PromotionDetails'
-import Settings from './NewEventRequests/Settings'
+import BasicDetails from './NewEventRequestsActionSteps/BasicDetails'
+import PackageDetails from './NewEventRequestsActionSteps/PackageDetails'
+import PromotionDetails from './NewEventRequestsActionSteps/PromotionDetails'
+import Settings from './NewEventRequestsActionSteps/Settings'
 
 const NewEventRequests = () => {
     const ref = useRef(null)
