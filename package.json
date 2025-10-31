@@ -92,6 +92,7 @@
     "yup": "^0.32.11"
   },
   "scripts": {
+    "preinstall": "corepack enable && corepack prepare yarn@4.9.2 --activate",
     "start": "craco --openssl-legacy-provider start",
     "build": "craco --openssl-legacy-provider build",
     "test": "craco test",
