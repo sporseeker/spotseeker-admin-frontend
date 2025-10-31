@@ -71,31 +71,31 @@ export default [
     id: "partnership-forms",
     title: "Partnership Forms",
     icon: <FileText size={12} />,
-    navLink: "/partner-agreements/list"
+    navLink: "/partners/agreements"
   },
   {
     id: "event-organizers",
     title: "Event Organizers",
     icon: <User size={12} />,
-    navLink: "/event-organizers/list"
+    navLink: "/organizers/list"
   },
   {
     id: "new-event-requests",
     title: "New Event Requests",
     icon: <List size={12} />,
-    navLink: "/new-event-requests"
+    navLink: "/events/requests/new"
   },
   {
     id: "event-requests",
     title: "Event Requests",
     icon: <List size={12} />,
-    navLink: "/event-requsts/list"
+    navLink: "/events/requests/list"
   },
   {
     id: "withdraw-funds",
     title: "Withdraw Funds",
     icon: <DollarSign size={12} />,
-    navLink: "/withdrawals/list"
+    navLink: "/withdrawals/funds"
   },
   {
     header: ""
