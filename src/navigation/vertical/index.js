@@ -83,7 +83,7 @@ export default [
     id: "new-event-requests",
     title: "New Event Requests",
     icon: <List size={12} />,
-    navLink: "/event-requests/new"
+    navLink: "/new-event-requests"
   },
   {
     id: "event-requests",
@@ -147,9 +147,6 @@ export default [
     title: "Payment Methods",
     icon: <DollarSign size={12} />,
     navLink: "/payment-gateways"
-  },
-  {
-    header: "Settings"
   },
   {
     id: "jobs",
