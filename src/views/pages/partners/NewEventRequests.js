@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Card,
   CardHeader,
@@ -16,7 +17,6 @@ import { Download, MoreVertical, Edit, Trash2 } from 'react-feather'
 import CustomDataTable from "@components/data-table"
 import SpinnerComponent from '../../../@core/components/spinner/Fallback-spinner'
 import { dummyNewEventRequests } from './constants'
-import { useNavigate } from 'react-router-dom'
 
 // ** Actions Dropdown Component
 const ActionsDropdown = ({ row }) => {
@@ -27,7 +27,8 @@ const ActionsDropdown = ({ row }) => {
   const toggle = () => setDropdownOpen(prevState => !prevState)
 
   const handleEdit = () => {
-    navigate('/events/requests/actions')
+    // navigate to the action page for editing
+    navigate('/new-event-requests/action')
   }
 
   const handleDelete = () => {
