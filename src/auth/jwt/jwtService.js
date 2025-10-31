@@ -2,16 +2,19 @@ import { TMApi } from '../../api/calls'
 import jwtDefaultConfig from './jwtDefaultConfig'
 
 export default class JwtService {
+  // ** jwtConfig <= Will be used by this service
   jwtConfig = { ...jwtDefaultConfig }
+
+  // ** For Refreshing Token
   isAlreadyFetchingAccessToken = false
+
+  // ** For Refreshing Token
   subscribers = []
 
-  // ** No CSRF cookie needed for JWT
-  // csrf() { return TMApi.get('/sanctum/csrf-cookie') }
+  csrf() { return TMApi.get('/sanctum/csrf-cookie') }
 
   onAccessTokenFetched(accessToken) {
-    this.subscribers.forEach(callback => callback(accessToken))
-    this.subscribers = []
+    this.subscribers = this.subscribers.filter(callback => callback(accessToken))
   }
 
   addSubscriber(callback) {
@@ -34,49 +37,21 @@ export default class JwtService {
     localStorage.setItem(this.jwtConfig.storageRefreshTokenKeyName, value)
   }
 
-  login(credentials) {
-    return TMApi.post(this.jwtConfig.loginEndpoint, credentials)
-      .then(response => {
-        const { accessToken, refreshToken } = response.data
-        this.setToken(accessToken)
-        this.setRefreshToken(refreshToken)
-        return response
-      })
+  login(...args) {
+    return TMApi.post(this.jwtConfig.loginEndpoint, ...args)
   }
 
-  register(data) {
-    return TMApi.post(this.jwtConfig.registerEndpoint, data)
+  register(...args) {
+    return TMApi.post(this.jwtConfig.registerEndpoint, ...args)
   }
 
   logout() {
-    return TMApi.post(this.jwtConfig.logoutEndpoint, {}, {
-      headers: {
-        Authorization: `${this.jwtConfig.tokenType} ${this.getToken()}`
-      }
-    }).finally(() => {
-      localStorage.removeItem(this.jwtConfig.storageTokenKeyName)
-      localStorage.removeItem(this.jwtConfig.storageRefreshTokenKeyName)
-    })
+    return TMApi.post(this.jwtConfig.logoutEndpoint)
   }
 
   refreshToken() {
-    if (this.isAlreadyFetchingAccessToken) {
-      return new Promise(resolve => this.addSubscriber(resolve))
-    }
-
-    this.isAlreadyFetchingAccessToken = true
-
     return TMApi.post(this.jwtConfig.refreshEndpoint, {
       refreshToken: this.getRefreshToken()
-    }).then(response => {
-      const { accessToken } = response.data
-      this.setToken(accessToken)
-      this.isAlreadyFetchingAccessToken = false
-      this.onAccessTokenFetched(accessToken)
-      return accessToken
-    }).catch(error => {
-      this.isAlreadyFetchingAccessToken = false
-      throw error
     })
   }
 }
