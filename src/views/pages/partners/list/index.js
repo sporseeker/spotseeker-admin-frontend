@@ -5,26 +5,16 @@ import {
   Col,
   Button,
   Input,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Badge
 } from "reactstrap"
 import { useEffect, useMemo, useState } from "react"
 import PartnershipAgreementsService from "@services/PartnershipAgreementsService"
 import DataTable from "react-data-table-component"
-import { Link, useNavigate } from "react-router-dom"
-import { Download, Edit, Trash2, MoreVertical, CheckCircle, XCircle, Clock, Eye, FileText } from "react-feather"
+import { Download, CheckCircle, Clock } from "react-feather"
 import SpinnerComponent from "../../../../@core/components/spinner/Fallback-spinner"
 import { Alert } from "@alerts"
-import Swal from "sweetalert2"
-import withReactContent from "sweetalert2-react-content"
-
-const MySwal = withReactContent(Swal)
 
 const PartnershipAgreementsList = () => {
-  const navigate = useNavigate()
   const [agreements, setAgreements] = useState([])
   const [pending, setPending] = useState(true)
   const [filterText, setFilterText] = useState("")
@@ -50,32 +40,6 @@ const PartnershipAgreementsList = () => {
   useEffect(() => {
     fetchAgreements(currentPage, perPage)
   }, [currentPage, perPage])
-
-  const handleDelete = (id) => {
-    MySwal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-outline-danger ms-1"
-      },
-      buttonsStyling: false
-    }).then((result) => {
-      if (result.isConfirmed) {
-        PartnershipAgreementsService.deleteEventOrganizer(id)
-          .then(() => {
-            Alert("Partnership agreement deleted successfully", "success")
-            fetchAgreements(currentPage, perPage)
-          })
-          .catch((err) => {
-            Alert(err.response?.data?.message || "Failed to delete partnership agreement", "error")
-          })
-      }
-    })
-  }
 
   const getAgreementStatusBadge = (agreementAccepted) => {
     return (
@@ -103,10 +67,18 @@ const PartnershipAgreementsList = () => {
     )
   }
 
-  const getBusinessRegBadge = (hasReg) => {
+  const getIdTypeBadge = (idType) => {
+    const typeConfig = {
+      NIC: { color: "primary", label: "NIC" },
+      DRIVING_LICENSE: { color: "info", label: "Driving License" },
+      PASSPORT: { color: "success", label: "Passport" }
+    }
+    
+    const config = typeConfig[idType] || { color: "secondary", label: idType || "N/A" }
+    
     return (
-      <Badge color={hasReg ? "success" : "secondary"}>
-        {hasReg ? "Yes" : "No"}
+      <Badge color={config.color}>
+        {config.label}
       </Badge>
     )
   }
@@ -115,71 +87,77 @@ const PartnershipAgreementsList = () => {
     {
       name: "ID",
       sortable: true,
-      minWidth: "80px",
+      minWidth: "70px",
       selector: (row) => row.id || 0
     },
     {
       name: "Organization",
       sortable: true,
-      minWidth: "200px",
+      minWidth: "180px",
       selector: (row) => row.organization_name || "N/A"
     },
     {
       name: "Organizer Name",
       sortable: true,
-      minWidth: "180px",
+      minWidth: "160px",
       selector: (row) => row.organizer_name || "N/A"
     },
     {
-      name: "Email",
+      name: "NIC",
       sortable: true,
-      minWidth: "220px",
-      selector: (row) => row.business_email || row.email || "N/A"
+      minWidth: "140px",
+      selector: (row) => row.organizer_nic || "N/A"
+    },
+    {
+      name: "ID Type",
+      sortable: true,
+      minWidth: "140px",
+      cell: (row) => getIdTypeBadge(row.id_type)
     },
     {
       name: "Mobile",
       sortable: true,
-      minWidth: "150px",
-      selector: (row) => row.organizer_mobile || row.mobile || "N/A"
+      minWidth: "130px",
+      selector: (row) => row.organizer_mobile || "N/A"
+    },
+    {
+      name: "Business Email",
+      sortable: true,
+      minWidth: "200px",
+      selector: (row) => row.business_email || "N/A"
     },
     {
       name: "Onboarding Step",
       sortable: true,
-      minWidth: "180px",
+      minWidth: "160px",
       cell: (row) => getOnboardingStepBadge(row.onboarding_step)
     },
     {
       name: "Agreement Status",
       sortable: true,
-      minWidth: "170px",
+      minWidth: "160px",
       cell: (row) => getAgreementStatusBadge(row.agreement_accepted)
     },
     {
       name: "Signed At",
       sortable: true,
-      minWidth: "180px",
+      minWidth: "160px",
       selector: (row) => (row.signed_at ? new Date(row.signed_at).toLocaleString() : "Not Signed")
     },
     {
       name: "Business Reg",
       sortable: true,
       minWidth: "130px",
-      cell: (row) => getBusinessRegBadge(row.has_business_registration)
-    },
-    {
-      name: "Signature",
-      sortable: true,
-      minWidth: "120px",
       cell: (row) => (
-        <Badge color={row.signature_file ? "success" : "secondary"}>
-          {row.signature_file ? "Available" : "N/A"}
+        <Badge color={row.has_business_registration ? "success" : "secondary"}>
+          {row.has_business_registration ? "Yes" : "No"}
         </Badge>
       )
     },
     {
       name: "Bank Details",
       sortable: true,
-      minWidth: "150px",
+      minWidth: "140px",
       cell: (row) => {
         const hasBank = row.bank_name && row.account_number
         return (
@@ -190,45 +168,72 @@ const PartnershipAgreementsList = () => {
       }
     },
     {
+      name: "Bank Name",
+      sortable: true,
+      minWidth: "140px",
+      selector: (row) => row.bank_name || "N/A"
+    },
+    {
+      name: "Account Number",
+      sortable: true,
+      minWidth: "150px",
+      selector: (row) => row.account_number || "N/A"
+    },
+    {
+      name: "Account Holder",
+      sortable: true,
+      minWidth: "160px",
+      selector: (row) => row.account_holder_name || "N/A"
+    },
+    {
+      name: "Branch",
+      sortable: true,
+      minWidth: "130px",
+      selector: (row) => row.branch || "N/A"
+    },
+    {
+      name: "Registered Address",
+      sortable: true,
+      minWidth: "200px",
+      selector: (row) => row.registered_address || "N/A"
+    },
+    {
+      name: "Organizer Address",
+      sortable: true,
+      minWidth: "200px",
+      selector: (row) => row.organizer_address || "N/A"
+    },
+    {
+      name: "Facebook URL",
+      sortable: true,
+      minWidth: "150px",
+      cell: (row) => row.facebook_url ? (
+        <a href={row.facebook_url} target="_blank" rel="noopener noreferrer" className="text-primary">
+          View
+        </a>
+      ) : "N/A"
+    },
+    {
+      name: "Instagram URL",
+      sortable: true,
+      minWidth: "150px",
+      cell: (row) => row.instagram_url ? (
+        <a href={row.instagram_url} target="_blank" rel="noopener noreferrer" className="text-primary">
+          View
+        </a>
+      ) : "N/A"
+    },
+    {
       name: "Created At",
       sortable: true,
-      minWidth: "180px",
+      minWidth: "160px",
       selector: (row) => (row.created_at ? new Date(row.created_at).toLocaleString() : "N/A")
     },
     {
-      name: "Actions",
-      minWidth: "150px",
-      cell: (row) => (
-        <UncontrolledDropdown>
-          <DropdownToggle tag="div" className="btn btn-sm">
-            <MoreVertical size={14} className="cursor-pointer" />
-          </DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem
-              className="w-100"
-              onClick={() => navigate(`/partner-agreements/view/${row.id}`)}
-            >
-              <Eye size={14} className="me-50" />
-              <span className="align-middle">View Details</span>
-            </DropdownItem>
-            <DropdownItem
-              className="w-100"
-              onClick={() => navigate(`/partner-agreements/agreement/${row.id}`)}
-            >
-              <FileText size={14} className="me-50" />
-              <span className="align-middle">View Agreement</span>
-            </DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem
-              className="w-100 text-danger"
-              onClick={() => handleDelete(row.id)}
-            >
-              <Trash2 size={14} className="me-50" />
-              <span className="align-middle">Delete</span>
-            </DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown>
-      )
+      name: "Updated At",
+      sortable: true,
+      minWidth: "160px",
+      selector: (row) => (row.updated_at ? new Date(row.updated_at).toLocaleString() : "N/A")
     }
   ]
 
@@ -240,13 +245,14 @@ const PartnershipAgreementsList = () => {
 
     const keys = [
       "id", "organization_name", "organizer_name", "organizer_nic", 
-      "organizer_mobile", "business_email", "email", "mobile",
+      "id_type", "organizer_mobile", "business_email",
       "onboarding_step", "agreement_accepted", "signed_at",
       "has_business_registration", "business_registration_file",
       "signature_file", "bank_name", "account_number", 
       "account_holder_name", "branch", "registered_address",
-      "organizer_address", "id_type", "facebook_url", "instagram_url",
-      "created_at", "updated_at"
+      "organizer_address", "id_front_file", "id_back_file",
+      "facebook_url", "instagram_url",
+      "created_at", "updated_at", "user_id"
     ]
 
     result = ""
@@ -264,7 +270,7 @@ const PartnershipAgreementsList = () => {
         } else if (typeof value === 'boolean') {
           result += value ? "Yes" : "No"
         } else {
-          result += value
+          result += `"${String(value).replace(/"/g, '""')}"`
         }
         ctr++
       })
@@ -280,7 +286,7 @@ const PartnershipAgreementsList = () => {
     let csv = convertArrayOfObjectsToCSV(array)
     if (csv === null) return
 
-    const filename = "partnership_agreements_export.csv"
+    const filename = `partnership_agreements_${new Date().toISOString().split('T')[0]}.csv`
 
     if (!csv.match(/^data:text\/csv/i)) {
       csv = `data:text/csv;charset=utf-8,${csv}`
@@ -308,7 +314,7 @@ const PartnershipAgreementsList = () => {
       <Input
         id="search"
         type="text"
-        placeholder="Filter table data..."
+        placeholder="Filter partners..."
         value={filterText}
         onChange={(e) => setFilterText(e.target.value)}
       />
@@ -318,7 +324,7 @@ const PartnershipAgreementsList = () => {
   return (
     <Card>
       <CardHeader className="border-bottom">
-        <h4 className="mb-0">Partnership Agreements</h4>
+        <h4 className="mb-0">Partnership Agreements - Partner Details</h4>
         <div className="d-flex mt-md-0 mt-1">
           <Button
             className="ms-2"

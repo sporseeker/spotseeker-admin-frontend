@@ -65,7 +65,7 @@ export default [
     id: "become-partner",
     title: "Become a Partner",
     icon: <Heart size={12} />,
-    navLink: "/partner-agreements/list"
+    navLink: "/become-a-partner/list"
   },
   {
     id: "partnership-forms",
