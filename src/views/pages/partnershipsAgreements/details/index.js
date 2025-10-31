@@ -1,7 +1,3 @@
-// ========================================
-// FILE: src/views/pages/eventOrganizers/details/index.js
-// ========================================
-
 import {
   Card,
   CardHeader,
@@ -115,6 +111,23 @@ const EventOrganizerDetails = () => {
     )
   }
 
+  const getOnboardingStepBadge = (step) => {
+    const stepConfig = {
+      COMPANY_PROFILE: { color: "info", label: "Company Profile" },
+      ORGANIZER_INFO: { color: "primary", label: "Organizer Info" },
+      AGREEMENT: { color: "warning", label: "Agreement" },
+      COMPLETE: { color: "success", label: "Complete" }
+    }
+    
+    const config = stepConfig[step] || { color: "secondary", label: step || "N/A" }
+    
+    return (
+      <Badge color={config.color}>
+        {config.label}
+      </Badge>
+    )
+  }
+
   if (loading) {
     return <SpinnerComponent />
   }
@@ -123,39 +136,57 @@ const EventOrganizerDetails = () => {
     return null
   }
 
-  // Dummy data for missing fields
+  // Map data from partners schema
   const organizerData = {
     ...eventOrganizer,
     // Basic Details
-    firstName: eventOrganizer.firstName || "John",
-    lastName: eventOrganizer.lastName || "Doe",
-    displayName: eventOrganizer.displayName || "John Doe Events",
-    address: eventOrganizer.address || "123 Event Street, City Center",
-    city: eventOrganizer.city || "Colombo",
-    country: eventOrganizer.country || "Sri Lanka",
-    postalCode: eventOrganizer.postalCode || "00100",
+    firstName: eventOrganizer.organizer_name ? eventOrganizer.organizer_name.split(' ')[0] : "N/A",
+    lastName: eventOrganizer.organizer_name ? eventOrganizer.organizer_name.split(' ').slice(1).join(' ') : "N/A",
+    displayName: eventOrganizer.organizer_name || "N/A",
+    email: eventOrganizer.email || eventOrganizer.business_email || "N/A",
+    mobile: eventOrganizer.mobile || eventOrganizer.organizer_mobile || "N/A",
+    address: eventOrganizer.organizer_address || "N/A",
+    city: "N/A", // Not in schema
+    country: "Sri Lanka", // Default
+    postalCode: "N/A", // Not in schema
+    nic: eventOrganizer.organizer_nic || "N/A",
+    idType: eventOrganizer.id_type || "N/A",
     
     // Company Details
-    companyName: eventOrganizer.companyName || "Event Masters Pvt Ltd",
-    businessRegNo: eventOrganizer.businessRegNo || "PV00123456",
-    taxId: eventOrganizer.taxId || "123-456-789",
-    companyAddress: eventOrganizer.companyAddress || "456 Business Road, Corporate Tower",
-    companyCity: eventOrganizer.companyCity || "Colombo",
-    companyCountry: eventOrganizer.companyCountry || "Sri Lanka",
-    companyEmail: eventOrganizer.companyEmail || "info@eventmasters.lk",
-    companyInstagram: eventOrganizer.companyInstagram || "https://www.instagram.com/eventmasters",
-    companyFacebook: eventOrganizer.companyFacebook || "https://www.facebook.com/eventmasters.events123",
+    companyName: eventOrganizer.organization_name || "N/A",
+    businessRegNo: "N/A", // Not directly in schema
+    taxId: "N/A", // Not in schema
+    companyAddress: eventOrganizer.registered_address || "N/A",
+    companyCity: "N/A", // Not in schema
+    companyCountry: "Sri Lanka", // Default
+    companyEmail: eventOrganizer.business_email || "N/A",
+    companyInstagram: eventOrganizer.instagram_url || "N/A",
+    companyFacebook: eventOrganizer.facebook_url || "N/A",
+    hasBusinessRegistration: eventOrganizer.has_business_registration || false,
+    businessRegistrationFile: eventOrganizer.business_registration_file || null,
     
     // Bank Details
-    bankName: eventOrganizer.bankName || "Commercial Bank",
-    accountNumber: eventOrganizer.accountNumber || "1234567890",
-    accountHolderName: eventOrganizer.accountHolderName || "John Doe",
-    branchCode: eventOrganizer.branchCode || "001",
-    swiftCode: eventOrganizer.swiftCode || "CCEYLKLX",
+    bankName: eventOrganizer.bank_name || "N/A",
+    accountNumber: eventOrganizer.account_number || "N/A",
+    accountHolderName: eventOrganizer.account_holder_name || "N/A",
+    branchCode: eventOrganizer.branch || "N/A",
+    swiftCode: "N/A", // Not in schema
     
     // Agreement
-    agreementSigned: eventOrganizer.agreementSigned !== undefined ? eventOrganizer.agreementSigned : true,
-    agreementDate: eventOrganizer.agreementDate || new Date().toISOString(),
+    agreementSigned: eventOrganizer.agreement_accepted || false,
+    agreementDate: eventOrganizer.signed_at || eventOrganizer.created_at || "N/A",
+    signatureFile: eventOrganizer.signature_file || null,
+    
+    // Onboarding
+    onboardingStep: eventOrganizer.onboarding_step || "N/A",
+    
+    // ID Documents
+    idFrontFile: eventOrganizer.id_front_file || null,
+    idBackFile: eventOrganizer.id_back_file || null,
+    
+    // Timestamps
+    createdAt: eventOrganizer.created_at || new Date().toISOString(),
+    updatedAt: eventOrganizer.updated_at || new Date().toISOString(),
     
     // Access Level
     permissions: eventOrganizer.permissions || ["CREATE_EVENTS", "MANAGE_TICKETS", "VIEW_REPORTS"]
@@ -281,15 +312,40 @@ const EventOrganizerDetails = () => {
                           />
                         </FormGroup>
                       </Col>
+                      <Col md="6">
+                        <FormGroup>
+                          <Label for="nic">NIC Number</Label>
+                          <Input
+                            type="text"
+                            id="nic"
+                            value={organizerData.nic}
+                            readOnly
+                            className="bg-light"
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col md="6">
+                        <FormGroup>
+                          <Label for="idType">ID Type</Label>
+                          <Input
+                            type="text"
+                            id="idType"
+                            value={organizerData.idType}
+                            readOnly
+                            className="bg-light"
+                          />
+                        </FormGroup>
+                      </Col>
                       <Col md="12">
                         <FormGroup>
                           <Label for="address">Address</Label>
                           <Input
-                            type="text"
+                            type="textarea"
                             id="address"
                             value={organizerData.address}
                             readOnly
                             className="bg-light"
+                            rows="2"
                           />
                         </FormGroup>
                       </Col>
@@ -349,10 +405,38 @@ const EventOrganizerDetails = () => {
                           </div>
                         </FormGroup>
                       </Col>
-                      <Col md="12">
+                      <Col md="6">
+                        <FormGroup>
+                          <Label>Onboarding Step</Label>
+                          <div>{getOnboardingStepBadge(organizerData.onboardingStep)}</div>
+                        </FormGroup>
+                      </Col>
+                      <Col md="6">
                         <FormGroup>
                           <Label>Status</Label>
                           <div>{getStatusBadge(organizerData.status)}</div>
+                        </FormGroup>
+                      </Col>
+                      <Col md="12">
+                        <FormGroup>
+                          <Label>ID Documents</Label>
+                          <div className="d-flex gap-1">
+                            {organizerData.idFrontFile && (
+                              <Badge color="light-success" className="p-75">
+                                ID Front Available
+                              </Badge>
+                            )}
+                            {organizerData.idBackFile && (
+                              <Badge color="light-success" className="p-75">
+                                ID Back Available
+                              </Badge>
+                            )}
+                            {!organizerData.idFrontFile && !organizerData.idBackFile && (
+                              <Badge color="light-secondary" className="p-75">
+                                No Documents
+                              </Badge>
+                            )}
+                          </div>
                         </FormGroup>
                       </Col>
                     </Row>
@@ -378,26 +462,28 @@ const EventOrganizerDetails = () => {
                       </Col>
                       <Col md="6">
                         <FormGroup>
-                          <Label for="businessRegNo">Business Registration (BR)</Label>
-                          <Input
-                            type="text"
-                            id="businessRegNo"
-                            value={organizerData.businessRegNo}
-                            readOnly
-                            className="bg-light"
-                          />
+                          <Label>Has Business Registration</Label>
+                          <div>
+                            <Badge color={organizerData.hasBusinessRegistration ? "success" : "secondary"}>
+                              {organizerData.hasBusinessRegistration ? "Yes" : "No"}
+                            </Badge>
+                          </div>
                         </FormGroup>
                       </Col>
                       <Col md="6">
                         <FormGroup>
-                          <Label for="taxId">Tax ID</Label>
-                          <Input
-                            type="text"
-                            id="taxId"
-                            value={organizerData.taxId}
-                            readOnly
-                            className="bg-light"
-                          />
+                          <Label>Business Registration File</Label>
+                          <div>
+                            {organizerData.businessRegistrationFile ? (
+                              <Badge color="light-success" className="p-75">
+                                File Available
+                              </Badge>
+                            ) : (
+                              <Badge color="light-secondary" className="p-75">
+                                No File
+                              </Badge>
+                            )}
+                          </div>
                         </FormGroup>
                       </Col>
                       <Col md="12">
@@ -490,7 +576,7 @@ const EventOrganizerDetails = () => {
                       </Col>
                       <Col md="6">
                         <FormGroup>
-                          <Label for="branchCode">Branch Code</Label>
+                          <Label for="branchCode">Branch</Label>
                           <Input
                             type="text"
                             id="branchCode"
@@ -524,13 +610,42 @@ const EventOrganizerDetails = () => {
                           />
                         </FormGroup>
                       </Col>
+                      <Col md="12" className="mt-2">
+                        <h5>Agreement Details</h5>
+                      </Col>
                       <Col md="6">
                         <FormGroup>
-                          <Label for="swiftCode">SWIFT/BIC Code</Label>
+                          <Label>Agreement Status</Label>
+                          <div>
+                            <Badge color={organizerData.agreementSigned ? "success" : "warning"}>
+                              {organizerData.agreementSigned ? "Accepted" : "Pending"}
+                            </Badge>
+                          </div>
+                        </FormGroup>
+                      </Col>
+                      <Col md="6">
+                        <FormGroup>
+                          <Label>Signature</Label>
+                          <div>
+                            {organizerData.signatureFile ? (
+                              <Badge color="light-success" className="p-75">
+                                Signature Available
+                              </Badge>
+                            ) : (
+                              <Badge color="light-secondary" className="p-75">
+                                No Signature
+                              </Badge>
+                            )}
+                          </div>
+                        </FormGroup>
+                      </Col>
+                      <Col md="12">
+                        <FormGroup>
+                          <Label for="agreementDate">Agreement Date</Label>
                           <Input
                             type="text"
-                            id="swiftCode"
-                            value={organizerData.swiftCode}
+                            id="agreementDate"
+                            value={organizerData.agreementDate !== "N/A" ? new Date(organizerData.agreementDate).toLocaleDateString() : "N/A"}
                             readOnly
                             className="bg-light"
                           />
@@ -550,7 +665,7 @@ const EventOrganizerDetails = () => {
                           <Label>User Type</Label>
                           <div>
                             <Badge color={organizerData.userType === "ADMIN" ? "primary" : "info"} className="p-75">
-                              {organizerData.userType}
+                              {organizerData.userType || "N/A"}
                             </Badge>
                           </div>
                         </FormGroup>
