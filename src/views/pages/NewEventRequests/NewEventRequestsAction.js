@@ -116,12 +116,7 @@ const [stepper, setStepper] = useState(null)
       })
     }
   }
-
-
-  
-
-  
-  const steps = [
+const steps = [
     {
       id: "basic-details",
       title: "Basic Details",
