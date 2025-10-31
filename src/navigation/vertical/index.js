@@ -1,4 +1,4 @@
-import { List, PieChart, UserPlus, Users, Home, Plus, Mail, Sun, Send, DollarSign, Settings } from "react-feather"
+import { List, PieChart, UserPlus, Users, Home, Plus, Mail, Sun, Send, DollarSign, Settings, UserCheck, FileText, User, Heart } from "react-feather"
 
 export default [
   {
@@ -7,12 +7,6 @@ export default [
     icon: <Sun size={20} />,
     navLink: "/dashboard"
   },
-  /*{
-    id: "event-dashboard",
-    title: "Event Dashboard",
-    icon: <Tv size={20} />,
-    navLink: "/event/dashboard"
-  },*/
   {
     header: ""
   },
@@ -22,12 +16,6 @@ export default [
     icon: <List size={12} />,
     navLink: "/booking/list"
   },
-  /*{
-    id: "verifyBooking",
-    title: "Verify Booking",
-    icon: <CheckCircle size={12} />,
-    navLink: "/booking/verify"
-  },*/
   {
     id: "sendOrderMail",
     title: "Send Booking Conf",
@@ -40,15 +28,6 @@ export default [
     icon: <Send size={20} />,
     navLink: "/booking/generateEticket"
   },
-  /*{
-    header: "Miscellaneous"
-  },
-  {
-    id: "completed-booking-list",
-    title: "Comp. Booking List",
-    icon: <Layers size={12} />,
-    navLink: "/booking/complted-list"
-  },*/
   {
     header: ""
   },
@@ -78,6 +57,45 @@ export default [
     title: "Notifications",
     icon: <Send size={12} />,
     navLink: "/notification/list"
+  },
+  {
+    header: "COPILOT"
+  },
+  {
+    id: "become-partner",
+    title: "Become a Partner",
+    icon: <Heart size={12} />,
+    navLink: "/become-a-partner/list"
+  },
+  {
+    id: "partnership-forms",
+    title: "Partnership Forms",
+    icon: <FileText size={12} />,
+    navLink: "partner-agreements/list"
+  },
+  {
+    id: "event-organizers",
+    title: "Event Organizers",
+    icon: <User size={12} />,
+    navLink: "/event-organizers/list"
+  },
+  {
+    id: "new-event-requests",
+    title: "New Event Requests",
+    icon: <List size={12} />,
+    navLink: "/events/requests/new"
+  },
+  {
+    id: "event-requests",
+    title: "Event Requests",
+    icon: <List size={12} />,
+    navLink: "/events/requests/list"
+  },
+  {
+    id: "withdraw-funds",
+    title: "Withdraw Funds",
+    icon: <DollarSign size={12} />,
+    navLink: "/withdrawals/funds"
   },
   {
     header: ""
@@ -129,9 +147,6 @@ export default [
     title: "Payment Methods",
     icon: <DollarSign size={12} />,
     navLink: "/payment-gateways"
-  },
-  {
-    header: "Settings"
   },
   {
     id: "jobs",

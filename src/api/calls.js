@@ -1,38 +1,48 @@
 import axios from "axios"
-import { Redirect } from "react"
 
+// Main API instance
 const TMApi = axios.create({
-  baseURL: process.env.REACT_APP_BASE_API,
+  baseURL: process.env.REACT_APP_BASE_API, // e.g. https://api.spotseeker.lk/
   headers: {
     "X-Requested-With": "XMLHttpRequest",
-    Accept: 'application/json' 
+    Accept: "application/json"
   },
   withCredentials: true
 })
 
-TMApi.interceptors.request.use(function (config) {
-  config.headers.Authorization = `Bearer ${localStorage.getItem(
-    "accessToken"
-  )}`
+// Auth API instance
+const AuthApi = axios.create({
+  baseURL: process.env.REACT_APP_BASE_API_login, // e.g. https://auth.spotseeker.lk/
+  headers: {
+    "X-Requested-With": "XMLHttpRequest",
+    Accept: "application/json"
+  },
+  withCredentials: true
+})
+
+// Add token automatically to main API only (not auth API)
+TMApi.interceptors.request.use(config => {
+  const token = localStorage.getItem("accessToken")
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
   return config
 })
 
-// ** Add request/response interceptor
+// Handle unauthorized or forbidden responses
 TMApi.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // ** const { config, response: { status } } = error
+  response => response,
+  error => {
     const { response } = error
-    // ** if (status === 401) {
-    if (response && response.status === 401) {
-      // localStorage.removeItem("userData")
-      // window.location.reload()
-    } else if (response && response.status === 403) {
-      // localStorage.removeItem("userData")
-      // window.location.reload()
+    if (response) {
+      if (response.status === 401 || response.status === 403) {
+        // Example action: redirect or clear session
+        // localStorage.removeItem("userData")
+        // window.location.reload()
+      }
     }
     return Promise.reject(error)
   }
 )
 
-export { TMApi }
+export { TMApi, AuthApi }
