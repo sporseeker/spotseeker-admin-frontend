@@ -7,29 +7,85 @@ import {
   Button,
   Input,
   Col,
+  Dropdown,
+  DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  UncontrolledDropdown,
-  DropdownToggle
+  Offcanvas,
+  OffcanvasHeader,
+  OffcanvasBody,
+  Form,
+  FormGroup,
+  Label
 } from 'reactstrap'
-import { Download, MoreVertical } from 'react-feather'
+import { Download, MoreVertical, Edit, Trash2, Mail, Phone, Eye } from 'react-feather'
 import CustomDataTable from "@components/data-table"
 import SpinnerComponent from '../../../@core/components/spinner/Fallback-spinner'
+import IconInput from '@components/icon-input'
 import { dummyPartnershipAgreements } from './constants'
 
 // ** Actions Dropdown Component
-const ActionsDropdown = () => {
+const ActionsDropdown = ({ row, onEdit }) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+
+  const toggle = () => setDropdownOpen(prevState => !prevState)
+
+  const handleEdit = () => {
+    console.log('Edit clicked for row:', row)
+    if (onEdit) onEdit(row)
+  }
+
+  const handleDelete = () => {
+    console.log('Delete clicked for row:', row)
+    // Add delete logic here
+  }
+
   return (
-    <UncontrolledDropdown>
-      <DropdownToggle tag='div' className='btn btn-sm'>
-        <MoreVertical size={20} color="#000000" />
-      </DropdownToggle>
-      <DropdownMenu>
-        <DropdownItem>View Details</DropdownItem>
-        <DropdownItem>Edit</DropdownItem>
-        <DropdownItem>Delete</DropdownItem>
-      </DropdownMenu>
-    </UncontrolledDropdown>
+    <div style={{ width: '50px', display: 'flex', justifyContent: 'center' }}>
+      <Dropdown isOpen={dropdownOpen} toggle={toggle} direction="left">
+        <DropdownToggle
+          tag="div"
+          style={{
+            cursor: 'pointer',
+            padding: '8px',
+            borderRadius: '4px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '32px',
+            height: '32px'
+          }}
+        >
+          <MoreVertical size={20} color="#000000" />
+        </DropdownToggle>
+        <DropdownMenu style={{ minWidth: '120px', width: '100%' }}>
+          <DropdownItem
+            onClick={handleEdit}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%',
+              padding: '8px 12px'
+            }}
+          >
+            <Edit size={14} style={{ marginRight: '8px' }} />
+            Edit
+          </DropdownItem>
+          <DropdownItem
+            onClick={handleDelete}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%',
+              padding: '8px 12px'
+            }}
+          >
+            <Trash2 size={14} style={{ marginRight: '8px' }} />
+            Delete
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    </div>
   )
 }
 

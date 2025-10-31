@@ -16,16 +16,18 @@ import { Download, MoreVertical, Edit, Trash2 } from 'react-feather'
 import CustomDataTable from "@components/data-table"
 import SpinnerComponent from '../../../@core/components/spinner/Fallback-spinner'
 import { dummyNewEventRequests } from './constants'
+import { useNavigate } from 'react-router-dom'
 
 // ** Actions Dropdown Component
 const ActionsDropdown = ({ row }) => {
+  const navigate = useNavigate()
+
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
   const toggle = () => setDropdownOpen(prevState => !prevState)
 
   const handleEdit = () => {
-    console.log('Edit clicked for row:', row)
-    // Add edit logic here
+    navigate('/events/requests/actions')
   }
 
   const handleDelete = () => {
