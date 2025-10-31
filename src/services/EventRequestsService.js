@@ -12,6 +12,14 @@ class EventRequstsService {
       }
     })
   }
+getAllEventOrganizersAdmin(page = 0, limit = 10) {
+    return TMApi.get(`${url}/admin/events`, {
+      params: {
+        page,
+        limit
+      }
+    })
+  }
 }
 
 export default new EventRequstsService()

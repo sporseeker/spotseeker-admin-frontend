@@ -41,7 +41,7 @@ const EventsRoutes = [
     }
   },
   {
-    path: '/events/requests/new',
+    path: '/new-event-requests/new',
     element: <NewEventRequests />,
     meta: {
       publicRoute: false,
