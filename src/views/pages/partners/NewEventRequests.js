@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Card,
   CardHeader,
@@ -20,12 +21,13 @@ import { dummyNewEventRequests } from './constants'
 // ** Actions Dropdown Component
 const ActionsDropdown = ({ row }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const navigate = useNavigate()
 
   const toggle = () => setDropdownOpen(prevState => !prevState)
 
   const handleEdit = () => {
-    console.log('Edit clicked for row:', row)
-    // Add edit logic here
+    // navigate to the action page for editing
+    navigate('/new-event-requests/action')
   }
 
   const handleDelete = () => {

@@ -71,13 +71,13 @@ export default [
     id: "partnership-forms",
     title: "Partnership Forms",
     icon: <FileText size={12} />,
-    navLink: "/partners/agreements"
+    navLink: "partner-agreements/list"
   },
   {
     id: "event-organizers",
     title: "Event Organizers",
     icon: <User size={12} />,
-    navLink: "/organizers/list"
+    navLink: "/event-organizers/list"
   },
   {
     id: "new-event-requests",
