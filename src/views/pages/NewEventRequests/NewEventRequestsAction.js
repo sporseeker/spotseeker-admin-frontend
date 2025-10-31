@@ -7,12 +7,13 @@ import BasicDetails from './NewEventRequestsActionSteps/BasicDetails'
 import PackageDetails from './NewEventRequestsActionSteps/PackageDetails'
 import PromotionDetails from './NewEventRequestsActionSteps/PromotionDetails'
 import Settings from './NewEventRequestsActionSteps/Settings'
+import Features from './NewEventRequestsActionSteps/Features'
 
 const NewEventRequests = () => {
     const ref = useRef(null)
 
 const [stepper, setStepper] = useState(null)
-  const [productData] = useImmer({
+  const [productData, setProductData] = useImmer({
     name: "",
     description: "",
     organizer: "",
@@ -102,6 +103,24 @@ const [stepper, setStepper] = useState(null)
     ],
     analytics_ids: []
   })
+
+
+    const handlePromotionStatus = (index, value, type) => {
+    if (index !== null) {
+      setProductData((product) => {
+        product.invoice[index][type] = value
+      })
+    } else {
+      setProductData((product) => {
+        product[type] = value
+      })
+    }
+  }
+
+
+  
+
+  
   const steps = [
     {
       id: "basic-details",
@@ -173,27 +192,27 @@ const [stepper, setStepper] = useState(null)
         //   handlePromotionStatus={handlePromotionStatus}
         />
       )
+    },
+    {
+      id: "features-details",
+      title: "Features",
+      content: (
+        <Features
+          stepper={stepper}
+          type="wizard-vertical"
+          // handleChange={handleChange}
+          productData={productData}
+          // handleInvitationPackageAdd={handleInvitationPackageAdd}
+          // handleInvitationPackageRemove={handleInvitationPackageRemove}
+          handlePromotionStatus={handlePromotionStatus}
+          // handleDropdownChange={handleDropdownChange}
+          // submitHandler={submitHandler}
+          // handleAddonAdd={handleAddonAdd}
+          // handleAddonRemove={handleAddonRemove}
+          // handleAddonInputChange={handleAddonInputChange}
+        />
+      )
     }
-    // {
-    //   id: "features-details",
-    //   title: "Features",
-    //   content: (
-    //     <Features
-    //       stepper={stepper}
-    //       type="wizard-vertical"
-    //       handleChange={handleChange}
-    //       productData={productData}
-    //       handleInvitationPackageAdd={handleInvitationPackageAdd}
-    //       handleInvitationPackageRemove={handleInvitationPackageRemove}
-    //       handlePromotionStatus={handlePromotionStatus}
-    //       handleDropdownChange={handleDropdownChange}
-    //       submitHandler={submitHandler}
-    //       handleAddonAdd={handleAddonAdd}
-    //       handleAddonRemove={handleAddonRemove}
-    //       handleAddonInputChange={handleAddonInputChange}
-    //     />
-    //   )
-    // },
     // {
     //   id: "payment-details",
     //   title: "Payment Methods",
