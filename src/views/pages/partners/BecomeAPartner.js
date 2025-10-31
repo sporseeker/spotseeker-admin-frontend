@@ -24,7 +24,7 @@ import './partners.scss'
 // import EventService from "@services/EventService"
 // import { Link } from "react-router-dom"
 // import { getStatus } from "@utils"
-import { Download, MoreVertical, Edit, Trash2, Mail, Phone, Eye } from "react-feather"
+import { Download, MoreVertical, Edit, Trash2, Mail, Phone, Eye, EyeOff } from "react-feather"
 // import { Download, Mail } from "react-feather"
 import SpinnerComponent from "../../../@core/components/spinner/Fallback-spinner"
 // import { dummyEvents, dummyInvitations } from "./constants"
@@ -131,6 +131,13 @@ const BecomeAPartner = () => {
     sendWhatsApp: false
   })
 
+  // Password visibility state
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
+  // Validation state
+  const [validationErrors, setValidationErrors] = useState({})
+
   const fetchData = async (page = 0, limit = pageSize) => {
     try {
       setPending(true)
@@ -213,10 +220,53 @@ const BecomeAPartner = () => {
 
   function handleFormChange(field, value) {
     setForm(prev => ({ ...prev, [field]: value }))
+    
+    // Clear validation errors when user starts typing
+    if (validationErrors[field]) {
+      setValidationErrors(prev => ({ ...prev, [field]: '' }))
+    }
+    
+    if (field === 'password' && validationErrors.confirmPassword) {
+      setValidationErrors(prev => ({ ...prev, confirmPassword: '' }))
+    }
+    
+    if (field === 'confirmPassword' && validationErrors.password) {
+      setValidationErrors(prev => ({ ...prev, password: '' }))
+    }
+  }
+
+  // Validation function
+  function validateForm() {
+    const errors = {}
+    
+    // Password validation
+    if (form.password && form.password.length < 8) {
+      errors.password = 'Password must be at least 8 characters long'
+    }
+    
+    // Confirm password validation
+    if (form.password && form.confirmPassword && form.password !== form.confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match'
+    }
+    
+    if (!form.password && form.confirmPassword) {
+      errors.password = 'Password is required'
+    }
+    
+    if (form.password && !form.confirmPassword) {
+      errors.confirmPassword = 'Please confirm your password'
+    }
+    
+    setValidationErrors(errors)
+    return Object.keys(errors).length === 0
   }
 
   function handleSave() {
     if (!selectedPartner) return
+
+    if (!validateForm()) {
+      return
+    }
 
     setPartnerData(prev => prev.map(p => {
       if (p.id === selectedPartner.id) { 
@@ -558,6 +608,7 @@ const BecomeAPartner = () => {
               value={form.email}
               onChange={e => handleFormChange('email', e.target.value)}
               icon={Mail}
+              readOnly={true}
             />
             <IconInput
               id="phone"
@@ -566,29 +617,43 @@ const BecomeAPartner = () => {
               value={form.phone}
               onChange={e => handleFormChange('phone', e.target.value)}
               icon={Phone}
+              readOnly={true}
             />
             <IconInput
               id="password"
               name="password"
               label="Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={form.password}
               onChange={e => handleFormChange('password', e.target.value)}
-              icon={Eye}
+              icon={showPassword ? EyeOff : Eye}
+              onIconClick={() => setShowPassword(!showPassword)}
+              error={validationErrors.password}
             />
             <IconInput
               id="confirmPassword"
               name="confirmPassword"
               label="Confirm Password"
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               value={form.confirmPassword}
               onChange={e => handleFormChange('confirmPassword', e.target.value)}
-              icon={Eye}
+              icon={showConfirmPassword ? EyeOff : Eye}
+              onIconClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              error={validationErrors.confirmPassword}
             />
             <FormGroup style={{ marginBottom: 0 }}>
               <Label for="status" style={{ fontFamily: 'Roboto Condensed, sans-serif', color: '#6A6775', fontSize: '16px', fontWeight: '400' }}>Status</Label>
-              <Input type="select" id="status" name="status" value={form.status} onChange={e => handleFormChange('status', e.target.value)}>
-                <option value="">Select Status...</option>
+              <Input 
+                type="select" 
+                id="status" 
+                name="status" 
+                value={form.status} 
+                onChange={e => handleFormChange('status', e.target.value)}
+                disabled={true}
+                style={{
+                  backgroundColor: '#fff'
+                }}
+              >
                 <option value="EMAIL_SUBMITTED">Email Submitted</option>
                 <option value="MOBILE_SUBMITTED">Mobile Submitted</option>
                 <option value="OTP_VERIFIED">OTP Verified</option>
