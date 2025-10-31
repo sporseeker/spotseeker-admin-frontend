@@ -8,9 +8,29 @@ import PackageDetails from './NewEventRequestsActionSteps/PackageDetails'
 import PromotionDetails from './NewEventRequestsActionSteps/PromotionDetails'
 import Settings from './NewEventRequestsActionSteps/Settings'
 import Features from './NewEventRequestsActionSteps/Features'
+import PaymentGateway from './NewEventRequestsActionSteps/PaymentGateway'
+import AnalyticsSettings from './NewEventRequestsActionSteps/AnalyticsSettings'
 
 const NewEventRequests = () => {
     const ref = useRef(null)
+    const [pgs] = useState([
+  {
+    id: 1,
+    name: "PayPal",
+    commission_rate: 2.9,
+    apply_handling_fee: true
+  },
+  {
+    id: 2,
+    name: "Stripe",
+    commission_rate: 2.9,
+    apply_handling_fee: true
+  }
+
+]
+
+)
+
 
 const [stepper, setStepper] = useState(null)
   const [productData, setProductData] = useImmer({
@@ -116,6 +136,14 @@ const [stepper, setStepper] = useState(null)
       })
     }
   }
+
+
+   const handleAnalyticsChange = (analytics) => {
+    setProductData((product) => ({
+      ...product,
+      analytics_ids: analytics
+    }))
+  }
 const steps = [
     {
       id: "basic-details",
@@ -207,35 +235,35 @@ const steps = [
           // handleAddonInputChange={handleAddonInputChange}
         />
       )
+    },
+    {
+      id: "payment-details",
+      title: "Payment Methods",
+      content: (
+        <PaymentGateway
+          stepper={stepper}
+          type="wizard-vertical"
+          // handleChange={handleChange}
+          productData={productData}
+          // handlePromotionStatus={handlePromotionStatus}
+          // handlePaymentGatewayActive={handlePaymentGatewayActive}
+          pgs={pgs}
+        />
+      )
+    },
+    {
+      id: "analytics",
+      title: "Analytics",
+      content: (
+        <AnalyticsSettings
+          stepper={stepper}
+          type="wizard-vertical"
+          // handleChange={handleChange}
+          productData={productData}
+          setAnalytics={handleAnalyticsChange}
+        />
+      )
     }
-    // {
-    //   id: "payment-details",
-    //   title: "Payment Methods",
-    //   content: (
-    //     <PaymentGateway
-    //       stepper={stepper}
-    //       type="wizard-vertical"
-    //       handleChange={handleChange}
-    //       productData={productData}
-    //       handlePromotionStatus={handlePromotionStatus}
-    //       handlePaymentGatewayActive={handlePaymentGatewayActive}
-    //       pgs={pgs}
-    //     />
-    //   )
-    // },
-    // {
-    //   id: "analytics",
-    //   title: "Analytics",
-    //   content: (
-    //     <AnalyticsSettings
-    //       stepper={stepper}
-    //       type="wizard-vertical"
-    //       handleChange={handleChange}
-    //       productData={productData}
-    //       setAnalytics={handleAnalyticsChange}
-    //     />
-    //   )
-    // }
   ]
 
     const submitHandler = () => { }

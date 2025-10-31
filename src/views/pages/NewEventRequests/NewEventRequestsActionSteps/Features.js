@@ -56,7 +56,7 @@ const Features = ({
       label: "Other"
     }
   ]
-  
+
   const increaseCount = (i) => {
     if (i !== null) {
       handleInvitationPackageAdd(i)
@@ -83,7 +83,7 @@ const Features = ({
 
   const deleteAddonForm = (i) => {
     console.log(i, addonCount - 1)
-    setCount(addonCategoryOpts  - 1)
+    setCount(addonCategoryOpts - 1)
     handleAddonRemove(i)
   }
 
@@ -138,7 +138,7 @@ const Features = ({
     }
   ]
 
-  
+
   return (
     <Fragment>
       {productData !== null ? (
@@ -173,9 +173,9 @@ const Features = ({
                 <Row>
                   {addons.map((pack, i) => {
                     return (
-                      <Row className="justify-content-between align-items-center">
-                        <Col md={10}>
-                          <Row>
+                      <Row className="mb-1">
+                        <Col md={12}>
+                          <Row className="align-items-center">
                             <Col md={4} className="mb-md-0 mb-1">
                               <Label
                                 className="form-label"
@@ -204,11 +204,11 @@ const Features = ({
                                 onChange={(e) => handleAddonInputChange(e, i, "input")}
                               />
                             </Col>
-                            <Col md={2}>
+                            <Col md={4}>
                               <Label
                                 className="form-label"
                                 for={`addonCategory-${i}`}>
-                                Category 
+                                Category
                               </Label>
                               <Select
                                 name={`addonCategory-${i}`}
@@ -221,44 +221,66 @@ const Features = ({
                                 onChange={(option, action) => handleAddonInputChange(null, i, "select", option, action)}
                               />
                             </Col>
-                            <Col md={2}>
-                              <Label className='form-label' for='addonImage'>
-                                Addon Image
-                              </Label>
-                              <Input type='file' onChange={(e) => handleAddonInputChange(e, i, "file")} name="addonImage" />
-                              {productData.ftype === 'edit' ? <img src={pack.addonImage} width="150" /> : ''}
+
+                          </Row>
+
+                          <Row className=" align-items-center py-2">
+                            <Col md={4} className="d-flex align-items-center">
+                              <div className="w-100">
+                                <Label className='form-label' for={`addonImage-${i}`}>
+                                  Addon Image
+                                </Label>
+                                <div className="d-flex align-items-center">
+                                  <Input type='file' onChange={(e) => handleAddonInputChange(e, i, "file")} name="addonImage" />
+                                  {productData.ftype === 'edit' ? (
+                                    <img src={pack.addonImage} width="150" className="ms-3" />
+                                  ) : (
+                                    ''
+                                  )}
+                                </div>
+                              </div>
+                            </Col>
+                            <Col md={1} className="text-end mt-2">
+                              <Button
+                                color={pack.deleted ? "success" : "danger"}
+                                className="text-nowrap px-1"
+                                onClick={() => {
+                                  pack.deleted ? increaseAddonCount(i) : deleteAddonForm(i)
+                                }}
+                                outline={!pack.deleted}>
+                                {pack.deleted ? (
+                                  <Plus size={14} className="me-50" />
+                                ) : (
+                                  <X size={14} className="me-50" />
+                                )}
+                                <span>{pack.deleted ? "Add again" : "Delete"}</span>
+                              </Button>
                             </Col>
                           </Row>
+
                         </Col>
-                        <Col md={2}>
-                          <Button
-                            color={pack.deleted ? "success" : "danger"}
-                            className="text-nowrap px-1"
-                            onClick={() => {
-                              pack.deleted ? increaseAddonCount(i) : deleteAddonForm(i)
-                            }}
-                            outline>
-                            {pack.deleted ? (
-                              <Plus size={14} className="me-50" />
-                            ) : (
-                              <X size={14} className="me-50" />
-                            )}
-                            <span>{pack.deleted ? "Add again" : "Delete"}</span>
-                          </Button>
-                        </Col>
+
+                        {/* Delete button on its own right-aligned row */}
+
+
                         <Col sm={12}>
                           <hr />
                         </Col>
                       </Row>
                     )
                   })}
-                  <Button
-                    className="btn-icon"
-                    color="primary"
-                    onClick={() => increaseAddonCount()}>
-                    <Plus size={14} />
-                    <span className="align-middle ms-25">Add New Addon</span>
-                  </Button>
+
+                  <Row>
+                    <Col md={12} className="mb-1">
+                      <Button
+                        className="btn-icon"
+                        color="danger"
+                        onClick={() => increaseAddonCount()}>
+                        <Plus size={14} />
+                        <span className="align-middle ms-25"> Add New</span>
+                      </Button>
+                    </Col>
+                  </Row>
                 </Row>
               )}
             </Col>
@@ -288,16 +310,7 @@ const Features = ({
                 </Col>
                 {productData.invitation_feature ? (
                   <Col md={4}>
-                    <Label className="form-label" for="handling_cost">
-                      Total Invitations Count
-                    </Label>
-                    <Input
-                      onChange={handleChange}
-                      type="text"
-                      name="invitation_count"
-                      value={productData.invitation_count}
-                      invalid={invitationQtyValid}
-                    />
+
                     <FormFeedback invalid>
                       Package inv. count should less than total inv. count
                     </FormFeedback>
@@ -311,8 +324,8 @@ const Features = ({
                   {packs.map((pack, i) => {
                     return (
                       <Row className="justify-content-between align-items-center">
-                        <Col md={10}>
-                          <Row>
+                        <Col md={12}>
+                          <Row className="align-items-center">
                             <Col md={4} className="mb-md-0 mb-1">
                               <Label
                                 className="form-label"
@@ -325,6 +338,7 @@ const Features = ({
                                 onChange={(e) => handleChange(e, i, "inv")}
                                 value={pack.packageName}
                                 name="packageName"
+                                className="w-100"
                               />
                             </Col>
                             <Col md={4}>
@@ -339,9 +353,10 @@ const Features = ({
                                 id={`packageDesc-${i}`}
                                 value={pack["packageDesc"]}
                                 onChange={(e) => handleChange(e, i, "inv")}
+                                className="w-100"
                               />
                             </Col>
-                            <Col md={2}>
+                            <Col md={4}>
                               <Label
                                 className="form-label"
                                 for={`packageFreeSeating-${i}`}>
@@ -349,7 +364,7 @@ const Features = ({
                               </Label>
                               <Select
                                 name={`packageFreeSeating`}
-                                className="react-select"
+                                className="react-select "
                                 classNamePrefix="select"
                                 value={featuredOpts.find(
                                   ({ value }) => value === pack["packageFreeSeating"]
@@ -359,25 +374,10 @@ const Features = ({
                                 }
                               />
                             </Col>
-                            <Col md={2}>
-                              <Label className="form-label" for={`active-${i}`}>
-                                Active
-                              </Label>
-                              <Select
-                                name={`active`}
-                                className="react-select"
-                                classNamePrefix="select"
-                                value={featuredOpts.find(
-                                  ({ value }) => value === pack["active"]
-                                )}
-                                options={featuredOpts}
-                                onChange={(option, action) => handleDropdownChange(option, action, i, "inv")
-                                }
-                              />
-                            </Col>
+
                           </Row>
-                          <Row>
-                            <Col md={2} className="mb-md-0 mb-1">
+                          <Row className="align-items-center">
+                            <Col md={4} className="mb-md-0 mb-1">
                               <Label
                                 className="form-label"
                                 for={`packageAvailQty-${i}`}>
@@ -390,31 +390,50 @@ const Features = ({
                                 value={pack["packageAvailQty"]}
                                 name="packageAvailQty"
                                 invalid={invitationQtyValid}
+                                className="w-100"
                               />
                               <FormFeedback invalid>
                                 Package inv. count should less than total inv.
                                 count
                               </FormFeedback>
                             </Col>
-                            <Col md={2} className="mb-md-0 mb-1">
-                              <Label
-                                className="form-label"
-                                for={`packageSoldQty-${i}`}>
-                                Sent Qty.
+
+                            <Col md={4}>
+                              <Label className="form-label" for={`active-${i}`}>
+                                Active
                               </Label>
-                              <Input
-                                type="number"
-                                value={pack["packageSoldQty"]}
-                                id={`packageSoldQty-${i}`}
-                                onChange={(e) => handleChange(e, i, "inv")}
-                                name="packageSoldQty"
-                                disabled
-                                readOnly
+                              <Select
+                                name={`active`}
+                                className="react-select w-100"
+                                classNamePrefix="select"
+                                value={featuredOpts.find(
+                                  ({ value }) => value === pack["active"]
+                                )}
+                                options={featuredOpts}
+                                onChange={(option, action) => handleDropdownChange(option, action, i, "inv")
+                                }
                               />
+                            </Col>
+
+                            <Col md={1} className="text-end pt-2">
+                              <Button
+                                color={pack.deleted ? "success" : "danger"}
+                                className="text-nowrap px-1"
+                                onClick={() => {
+                                  pack.deleted ? increaseCount(i) : deleteForm(i)
+                                }}
+                                outline={!pack.deleted}>
+                                {pack.deleted ? (
+                                  <Plus size={14} className="me-50" />
+                                ) : (
+                                  <X size={14} className="me-50" />
+                                )}
+                                <span>{pack.deleted ? "Add again" : "Delete"}</span>
+                              </Button>
                             </Col>
                           </Row>
                           {!productData.free_seating &&
-                          !pack["packageFreeSeating"] ? (
+                            !pack["packageFreeSeating"] ? (
                             <>
                               <Row>
                                 <Col md={12}>
@@ -429,6 +448,7 @@ const Features = ({
                                     id={`packageAllocSeats-${i}`}
                                     value={pack["packageAllocSeats"]}
                                     onChange={(e) => handleChange(e, i, "inv")}
+                                    className="w-100"
                                   />
                                 </Col>
                               </Row>
@@ -437,35 +457,24 @@ const Features = ({
                             ""
                           )}
                         </Col>
-                        <Col md={2}>
-                          <Button
-                            color={pack.deleted ? "success" : "danger"}
-                            className="text-nowrap px-1"
-                            onClick={() => {
-                              pack.deleted ? increaseCount(i) : deleteForm(i)
-                            }}
-                            outline>
-                            {pack.deleted ? (
-                              <Plus size={14} className="me-50" />
-                            ) : (
-                              <X size={14} className="me-50" />
-                            )}
-                            <span>{pack.deleted ? "Add again" : "Delete"}</span>
-                          </Button>
-                        </Col>
+                        
                         <Col sm={12}>
                           <hr />
                         </Col>
                       </Row>
                     )
                   })}
-                  <Button
-                    className="btn-icon"
-                    color="primary"
-                    onClick={() => increaseCount()}>
-                    <Plus size={14} />
-                    <span className="align-middle ms-25">Add New</span>
-                  </Button>
+                  <Row>
+                    <Col md={12} className="mb-1">
+                      <Button
+                        className="btn-icon"
+                        color="danger"
+                        onClick={() => increaseAddonCount()}>
+                        <Plus size={14} />
+                        <span className="align-middle ms-25"> Add New</span>
+                      </Button>
+                    </Col>
+                  </Row>
                 </Row>
               )}
             </Col>
@@ -483,17 +492,17 @@ const Features = ({
               </span>
             </Button>
             <Button
-                          type="button"
-                          color="primary"
-                          className="btn-next"
-                          onClick={() => stepper.next()}>
-                          <span className="align-middle d-sm-inline-block d-none">
-                            Next
-                          </span>
-                          <ArrowRight
-                            size={14}
-                            className="align-middle ms-sm-25 ms-0"></ArrowRight>
-                        </Button>
+              type="button"
+              color="primary"
+              className="btn-next"
+              onClick={() => stepper.next()}>
+              <span className="align-middle d-sm-inline-block d-none">
+                Next
+              </span>
+              <ArrowRight
+                size={14}
+                className="align-middle ms-sm-25 ms-0"></ArrowRight>
+            </Button>
           </div>
         </Form>
       ) : (
