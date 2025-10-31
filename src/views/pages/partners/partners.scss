@@ -1,0 +1,201 @@
+.partner-offcanvas {
+  // Reset Bootstrap margins that may be applied elsewhere
+  .form-group,
+  .form-check,
+  .form-group > .form-control,
+  .form-group > label {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  // Ensure label spacing is small and consistent
+  label {
+    margin-bottom: 4px !important;
+    display: block;
+    line-height: 1.2;
+  }
+
+  // Tighter inputs
+  .form-control {
+    /* Set inputs to requested 48px height and adjust padding to vertically center text */
+    padding: 10px 12px !important;
+    height: 48px !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0 !important;
+    box-sizing: border-box !important;
+    /* Ensure inputs inside the offcanvas use a consistent white background so
+       readonly fields (commission/total) match the editable fields. The
+       global theme or browser defaults can give readonly inputs a different
+       background; this forces a matching look here. */
+    background-color: #ffffff !important;
+    border-color: #d4d8dd !important; // Very slightly stronger border for subtle visibility
+  }
+
+  // Make readonly fields visually match editable inputs inside this offcanvas
+  // The global theme sets `.form-control[readonly] { opacity: 0.5 }` which
+  // makes readonly values look faded — override it locally so commission/total
+  // fields display the same color as editable fields.
+  .form-control[readonly] {
+    opacity: 1 !important;
+    color: #6A6775 !important; // match label/text color used in the offcanvas
+  }
+
+  // Ensure select inputs match the height and visual alignment
+  select.form-control,
+  .form-control[type="select"],
+  select {
+    height: 48px !important;
+    padding: 10px 12px !important;
+    line-height: 1.2 !important;
+    box-sizing: border-box !important;
+  }
+
+  // Override common margin utility classes inside this offcanvas
+  .mb-0, .mb-1, .mb-2, .mb-3, .mb-4, .mb-5 {
+    margin-bottom: 0 !important;
+  }
+
+  .offcanvas-body {
+    padding: 12px !important;
+  }
+
+  // Improve file input appearance: ensure the native file button and text
+  // are vertically centered and the hover area covers the full 48px height.
+  input[type="file"] {
+    height: 48px !important;
+    padding: 10px 12px !important;
+    line-height: 1.2 !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    background-color: #ffffff !important;
+  }
+
+  // Chromium / WebKit file button
+  input[type="file"]::file-selector-button,
+  input[type="file"]::-webkit-file-upload-button {
+    height: 100% !important;
+    padding: 0 12px !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    -webkit-appearance: none !important;
+  }
+
+  // Firefox file button
+  input[type="file"]::-moz-file-upload-button {
+    height: 100% !important;
+    padding: 0 12px !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    cursor: pointer !important;
+  }
+
+  // Make the file input look like a full-width bordered control with a
+  // separated selector button (vertical divider) similar to other inputs.
+  // custom file picker container (used for consistent look)
+  .custom-file-picker {
+    width: 100%;
+    height: 48px;
+    border: 1px solid #d4d8dd; // Match the very subtle border color
+    border-radius: 4px;
+    display: flex;
+    align-items: stretch; // Changed from center to stretch for better height matching
+    overflow: hidden;
+    background: #fff;
+    box-sizing: border-box;
+  }
+
+  // Hide the real file input off-screen so browsers don't render their default
+  // control inside the custom picker container.
+  .custom-file-picker input[type="file"].hidden-file-input {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .custom-file-picker .choose-file-btn {
+    width: 102px;
+    height: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 12px;
+    border-right: 1px solid #d4d8dd; // Match the very subtle border color
+    background: transparent;
+    color: #6A6775;
+    font-family: 'Roboto Condensed, sans-serif';
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0; // Prevent button from shrinking
+  }
+
+  .custom-file-picker .file-name {
+    padding: 0 12px;
+    color: #6A6775;
+    font-family: 'Roboto Condensed, sans-serif';
+    font-size: 16px;
+    font-weight: 400;
+    display: block; // Changed from flex to block for better text truncation
+    height: 100%;
+    line-height: 48px; // Match container height for vertical centering
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  // Style the internal button to visually match the split in your screenshot
+  input[type="file"]::file-selector-button,
+  input[type="file"]::-webkit-file-upload-button,
+  input[type="file"]::-moz-file-upload-button {
+    background: transparent !important;
+    border-left: 1px solid #d4d8dd !important; // Match the very subtle border color
+    padding: 0 16px !important;
+    height: 100% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  // Ensure the text area (filename) uses same padding as other inputs
+  input[type="file"]::-webkit-file-upload-button + * {
+    padding-left: 12px !important;
+  }
+
+  // Fix focus styling for input groups - apply to entire field consistently
+  .input-group:focus-within .input-group-text,
+  .input-group:hover .input-group-text {
+    border-top-color: #EA5455 !important; 
+    border-right-color: #EA5455 !important; 
+    border-bottom-color: #EA5455 !important; 
+    border-left-color: #EA5455 !important; 
+  }
+
+  .input-group:focus-within .form-control,
+  .input-group:hover .form-control {
+    border-color: #EA5455 !important; 
+    box-shadow: none !important; 
+  }
+
+  // Override Bootstrap's default red focus styling
+  .partner-offcanvas .input-group .input-group-text:focus,
+  .partner-offcanvas .input-group:focus .input-group-text,
+  .partner-offcanvas .input-group .input-group-text:hover {
+    border-top-color: #EA5455 !important;
+    border-right-color: #EA5455 !important;
+    border-bottom-color: #EA5455 !important;
+    border-left-color: #EA5455 !important;
+    box-shadow: none !important;
+  }
+}

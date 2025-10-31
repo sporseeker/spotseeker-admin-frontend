@@ -80,6 +80,36 @@ export default [
     navLink: "/notification/list"
   },
   {
+    id: "become-partner",
+    title: "Become a Partner",
+    navLink: "/partners/become"
+  },
+  {
+    id: "partnership-forms",
+    title: "Partnership Agreements",
+    navLink: "/partners/agreements"
+  },
+  {
+    id: "event-organizers",
+    title: "Event Organizers",
+    navLink: "/organizers/list"
+  },
+  {
+    id: "new-event-requests",
+    title: "New Event Requests",
+    navLink: "/events/requests/new"
+  },
+  {
+    id: "event-requests",
+    title: "Event Requests",
+    navLink: "/events/requests/list"
+  },
+  {
+    id: "withdraw-funds",
+    title: "Withdraw Funds",
+    navLink: "/withdrawals/funds"
+  },
+  {
     header: ""
   },
   {
