@@ -1,7 +1,3 @@
-// ========================================
-// FILE: src/views/pages/withdrawals/list/index.js
-// ========================================
-
 import {
   Card,
   CardHeader,
@@ -38,153 +34,152 @@ const WithdrawFunds = () => {
   const [selectedWithdrawal, setSelectedWithdrawal] = useState(null)
   const [receiptFile, setReceiptFile] = useState(null)
 
-  // Sample data for testing
+  // Sample data for testing based on schema
   const sampleData = [
     {
-      id: 13565,
-      organizerName: "Oneli Weerasooriya",
-      bankName: "Bank of Ceylon",
-      amount: "100,000",
-      note: "Staff Payment",
+      id: 1,
+      account_name: "Oneli Weerasooriya",
+      account_number: "1234567890",
+      amount: 100000.00,
+      bank_name: "Bank of Ceylon",
+      note: "Staff Payment for Summer Festival",
       status: "PENDING",
-      accountNumber: "1234567890",
-      accountName: "Oneli Weerasooriya",
-      commission: "5,000",
-      totalWithdrawAmount: "95,000",
-      transactionReceiptId: "",
-      createdAt: "2025-10-30T10:30:00"
+      event_id: 1,
+      partner_id: 1,
+      created_at: "2025-10-30T10:30:00",
+      updated_at: "2025-10-30T10:30:00",
+      processed_at: null
     },
     {
-      id: 13566,
-      organizerName: "Dilakshan Surendra",
-      bankName: "Commercial",
-      amount: "250,000",
-      note: "Venue Booking",
+      id: 2,
+      account_name: "Dilakshan Surendra",
+      account_number: "9876543210",
+      amount: 250000.00,
+      bank_name: "Commercial Bank",
+      note: "Venue Booking Payment",
       status: "PENDING",
-      accountNumber: "9876543210",
-      accountName: "Dilakshan Surendra",
-      commission: "12,500",
-      totalWithdrawAmount: "237,500",
-      transactionReceiptId: "",
-      createdAt: "2025-10-29T15:20:00"
+      event_id: 2,
+      partner_id: 2,
+      created_at: "2025-10-29T15:20:00",
+      updated_at: "2025-10-29T15:20:00",
+      processed_at: null
     },
     {
-      id: 13567,
-      organizerName: "Bhanuka Eranga",
-      bankName: "People's Bank",
-      amount: "300,000",
-      note: "Catering Service",
+      id: 3,
+      account_name: "Bhanuka Eranga",
+      account_number: "5554443322",
+      amount: 300000.00,
+      bank_name: "People's Bank",
+      note: "Catering Service Payment",
       status: "PENDING",
-      accountNumber: "5554443322",
-      accountName: "Bhanuka Eranga",
-      commission: "15,000",
-      totalWithdrawAmount: "285,000",
-      transactionReceiptId: "",
-      createdAt: "2025-10-28T08:15:00"
+      event_id: 3,
+      partner_id: 3,
+      created_at: "2025-10-28T08:15:00",
+      updated_at: "2025-10-28T08:15:00",
+      processed_at: null
     },
     {
-      id: 13568,
-      organizerName: "Minal Sasnuka",
-      bankName: "Bank of Ceylon",
-      amount: "40,000",
-      note: "Printing Tickets",
-      status: "APPROVED",
-      accountNumber: "1112223334",
-      accountName: "Minal Sasnuka",
-      commission: "2,000",
-      totalWithdrawAmount: "38,000",
-      transactionReceiptId: "TRX001",
-      createdAt: "2025-10-27T12:45:00"
+      id: 4,
+      account_name: "Minal Sasnuka",
+      account_number: "1112223334",
+      amount: 40000.00,
+      bank_name: "Bank of Ceylon",
+      note: "Ticket Printing Services",
+      status: "TRANSFERRED",
+      event_id: 1,
+      partner_id: 1,
+      created_at: "2025-10-27T12:45:00",
+      updated_at: "2025-10-28T10:00:00",
+      processed_at: "2025-10-28T10:00:00"
     },
     {
-      id: 13569,
-      organizerName: "Kalana Dheemantha",
-      bankName: "Bank of Ceylon",
-      amount: "80,000",
+      id: 5,
+      account_name: "Kalana Dheemantha",
+      account_number: "7778889990",
+      amount: 80000.00,
+      bank_name: "Sampath Bank",
       note: "License & Permits",
-      status: "APPROVED",
-      accountNumber: "7778889990",
-      accountName: "Kalana Dheemantha",
-      commission: "4,000",
-      totalWithdrawAmount: "76,000",
-      transactionReceiptId: "TRX002",
-      createdAt: "2025-10-26T09:30:00"
+      status: "TRANSFERRED",
+      event_id: 2,
+      partner_id: 2,
+      created_at: "2025-10-26T09:30:00",
+      updated_at: "2025-10-27T11:00:00",
+      processed_at: "2025-10-27T11:00:00"
     },
     {
-      id: 13570,
-      organizerName: "Theekshana Chamin",
-      bankName: "Commercial",
-      amount: "190,000",
-      note: "Security Services",
-      status: "APPROVED",
-      accountNumber: "3332221110",
-      accountName: "Theekshana Chamin",
-      commission: "9,500",
-      totalWithdrawAmount: "180,500",
-      transactionReceiptId: "TRX003",
-      createdAt: "2025-10-25T14:20:00"
+      id: 6,
+      account_name: "Theekshana Chamin",
+      account_number: "3332221110",
+      amount: 190000.00,
+      bank_name: "Commercial Bank",
+      note: "Security Services Payment",
+      status: "TRANSFERRED",
+      event_id: 3,
+      partner_id: 3,
+      created_at: "2025-10-25T14:20:00",
+      updated_at: "2025-10-26T09:30:00",
+      processed_at: "2025-10-26T09:30:00"
     },
     {
-      id: 13571,
-      organizerName: "Leyana Dabare",
-      bankName: "People's Bank",
-      amount: "220,000",
-      note: "Staff Payment",
-      status: "APPROVED",
-      accountNumber: "6665554443",
-      accountName: "Leyana Dabare",
-      commission: "11,000",
-      totalWithdrawAmount: "209,000",
-      transactionReceiptId: "TRX004",
-      createdAt: "2025-10-24T11:15:00"
+      id: 7,
+      account_name: "Leyana Dabare",
+      account_number: "6665554443",
+      amount: 220000.00,
+      bank_name: "People's Bank",
+      note: "Event Staff Salaries",
+      status: "TRANSFERRED",
+      event_id: 1,
+      partner_id: 1,
+      created_at: "2025-10-24T11:15:00",
+      updated_at: "2025-10-25T14:00:00",
+      processed_at: "2025-10-25T14:00:00"
     },
     {
-      id: 13572,
-      organizerName: "Javen Dimithri",
-      bankName: "Bank of Ceylon",
-      amount: "150,000",
-      note: "Sound & Lighting",
-      status: "APPROVED",
-      accountNumber: "8889990001",
-      accountName: "Javen Dimithri",
-      commission: "7,500",
-      totalWithdrawAmount: "142,500",
-      transactionReceiptId: "TRX005",
-      createdAt: "2025-10-23T16:40:00"
+      id: 8,
+      account_name: "Javen Dimithri",
+      account_number: "8889990001",
+      amount: 150000.00,
+      bank_name: "Bank of Ceylon",
+      note: "Sound & Lighting Equipment",
+      status: "TRANSFERRED",
+      event_id: 2,
+      partner_id: 2,
+      created_at: "2025-10-23T16:40:00",
+      updated_at: "2025-10-24T10:00:00",
+      processed_at: "2025-10-24T10:00:00"
     },
     {
-      id: 13573,
-      organizerName: "Kulindu Hansaja",
-      bankName: "Commercial",
-      amount: "30,000",
-      note: "Facebook Ads",
-      status: "APPROVED",
-      accountNumber: "2221110009",
-      accountName: "Kulindu Hansaja",
-      commission: "1,500",
-      totalWithdrawAmount: "28,500",
-      transactionReceiptId: "TRX006",
-      createdAt: "2025-10-22T10:25:00"
+      id: 9,
+      account_name: "Kulindu Hansaja",
+      account_number: "2221110009",
+      amount: 30000.00,
+      bank_name: "Commercial Bank",
+      note: "Facebook Advertising Campaign",
+      status: "TRANSFERRED",
+      event_id: 3,
+      partner_id: 3,
+      created_at: "2025-10-22T10:25:00",
+      updated_at: "2025-10-23T08:00:00",
+      processed_at: "2025-10-23T08:00:00"
     },
     {
-      id: 13574,
-      organizerName: "Venuk De Soyza",
-      bankName: "People's Bank",
-      amount: "80,000",
-      note: "Staff Payment",
+      id: 10,
+      account_name: "Venuk De Soyza",
+      account_number: "4443332221",
+      amount: 80000.00,
+      bank_name: "People's Bank",
+      note: "Incomplete documentation provided",
       status: "REJECTED",
-      accountNumber: "4443332221",
-      accountName: "Venuk De Soyza",
-      commission: "4,000",
-      totalWithdrawAmount: "76,000",
-      transactionReceiptId: "",
-      createdAt: "2025-10-21T13:50:00"
+      event_id: 1,
+      partner_id: 1,
+      created_at: "2025-10-21T13:50:00",
+      updated_at: "2025-10-22T09:00:00",
+      processed_at: "2025-10-22T09:00:00"
     }
   ]
 
   const fetchWithdrawals = () => {
     setPending(true)
-    // Assuming eventId = 1 for now, you can make this dynamic
     WithdrawalService.getEventWithdrawals(1)
       .then((res) => {
         const fetchedWithdrawals = res.data.withdrawals || []
@@ -206,7 +201,6 @@ const WithdrawFunds = () => {
   const getStatusBadge = (status) => {
     const statusConfig = {
       PENDING: { color: "warning", text: "Pending" },
-      APPROVED: { color: "success", text: "Approved" },
       TRANSFERRED: { color: "success", text: "Transferred" },
       REJECTED: { color: "danger", text: "Rejected" }
     }
@@ -261,45 +255,77 @@ const WithdrawFunds = () => {
     })
   }
 
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-LK', {
+      style: 'currency',
+      currency: 'LKR',
+      minimumFractionDigits: 2
+    }).format(amount || 0)
+  }
+
   const columns = [
     {
       name: "ID",
       sortable: true,
-      minWidth: "100px",
-      selector: (row) => row.id
+      minWidth: "80px",
+      selector: (row) => row.id || 0
     },
     {
-      name: "ORGANIZER NAME",
+      name: "Account Name",
       sortable: true,
       minWidth: "200px",
-      selector: (row) => row.organizerName
+      selector: (row) => row.account_name || "N/A"
     },
     {
-      name: "BANK NAME",
+      name: "Account Number",
       sortable: true,
       minWidth: "180px",
-      selector: (row) => row.bankName
+      selector: (row) => row.account_number || "N/A"
     },
     {
-      name: "AMOUNT",
+      name: "Bank Name",
+      sortable: true,
+      minWidth: "180px",
+      selector: (row) => row.bank_name || "N/A"
+    },
+    {
+      name: "Amount",
       sortable: true,
       minWidth: "150px",
-      selector: (row) => `LKR ${row.amount}`
+      selector: (row) => formatCurrency(row.amount)
     },
     {
-      name: "NOTE",
+      name: "Event ID",
       sortable: true,
-      minWidth: "180px",
-      selector: (row) => row.note
+      minWidth: "100px",
+      selector: (row) => row.event_id || "N/A"
     },
     {
-      name: "STATUS",
+      name: "Partner ID",
+      sortable: true,
+      minWidth: "120px",
+      selector: (row) => row.partner_id || "N/A"
+    },
+    {
+      name: "Status",
       sortable: true,
       minWidth: "150px",
       cell: (row) => getStatusBadge(row.status)
     },
     {
-      name: "ACTIONS",
+      name: "Created At",
+      sortable: true,
+      minWidth: "180px",
+      selector: (row) => (row.created_at ? new Date(row.created_at).toLocaleString() : "N/A")
+    },
+    {
+      name: "Processed At",
+      sortable: true,
+      minWidth: "180px",
+      selector: (row) => (row.processed_at ? new Date(row.processed_at).toLocaleString() : "N/A")
+    },
+    {
+      name: "Actions",
       minWidth: "100px",
       cell: (row) => (
         <Button
@@ -319,7 +345,11 @@ const WithdrawFunds = () => {
     const columnDelimiter = ","
     const lineDelimiter = "\n"
 
-    const keys = ["id", "organizerName", "bankName", "amount", "note", "status", "createdAt"]
+    const keys = [
+      "id", "account_name", "account_number", "bank_name", "amount",
+      "event_id", "partner_id", "status", "note",
+      "created_at", "updated_at", "processed_at"
+    ]
 
     result = ""
     result += keys.join(columnDelimiter)
@@ -331,11 +361,11 @@ const WithdrawFunds = () => {
         if (ctr > 0) result += columnDelimiter
         
         let value = item[key]
-        if (key === "createdAt" && value) {
+        if ((key === "created_at" || key === "updated_at" || key === "processed_at") && value) {
           value = new Date(value).toLocaleString()
         }
         if (value === null || value === undefined) {
-          value = "N/A"
+          value = ""
         }
         
         result += value
@@ -388,12 +418,12 @@ const WithdrawFunds = () => {
           <div className="d-flex mt-md-0 mt-1">
             <Button
               className="ms-2"
-              color="secondary"
-              outline
+              color="primary"
               onClick={() => downloadCSV(withdrawals)}
               disabled={withdrawals.length === 0}
             >
-              Reset
+              <Download size={15} />
+              <span className="align-middle ms-50">Download CSV</span>
             </Button>
           </div>
         </CardHeader>
@@ -420,7 +450,7 @@ const WithdrawFunds = () => {
       <Modal isOpen={modalOpen} toggle={toggleModal} size="lg">
         <ModalHeader toggle={toggleModal}>
           <div className="d-flex justify-content-between align-items-center w-100">
-            <span>Edit Withdraw #{selectedWithdrawal?.id}</span>
+            <span>Edit Withdrawal #{selectedWithdrawal?.id}</span>
             <Button color="link" className="text-dark p-0" onClick={toggleModal}>
               <X size={20} />
             </Button>
@@ -432,11 +462,23 @@ const WithdrawFunds = () => {
               <Row>
                 <Col md="12">
                   <FormGroup>
-                    <Label for="organizerName">Organizer Name</Label>
+                    <Label for="accountName">Account Name</Label>
                     <Input
                       type="text"
-                      id="organizerName"
-                      value={selectedWithdrawal.organizerName}
+                      id="accountName"
+                      value={selectedWithdrawal.account_name || "N/A"}
+                      readOnly
+                      className="bg-light"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col md="12">
+                  <FormGroup>
+                    <Label for="accountNumber">Account Number</Label>
+                    <Input
+                      type="text"
+                      id="accountNumber"
+                      value={selectedWithdrawal.account_number || "N/A"}
                       readOnly
                       className="bg-light"
                     />
@@ -448,43 +490,55 @@ const WithdrawFunds = () => {
                     <Input
                       type="text"
                       id="bankName"
-                      value={selectedWithdrawal.bankName}
+                      value={selectedWithdrawal.bank_name || "N/A"}
                       readOnly
                       className="bg-light"
                     />
                   </FormGroup>
                 </Col>
-                <Col md="12">
+                <Col md="6">
                   <FormGroup>
                     <Label for="amount">Amount</Label>
                     <Input
                       type="text"
                       id="amount"
-                      value={`LKR ${selectedWithdrawal.amount}`}
+                      value={formatCurrency(selectedWithdrawal.amount)}
                       readOnly
                       className="bg-light"
                     />
                   </FormGroup>
                 </Col>
-                <Col md="12">
+                <Col md="6">
                   <FormGroup>
-                    <Label for="commission">Commissions (5%)</Label>
+                    <Label for="currentStatus">Current Status</Label>
                     <Input
                       type="text"
-                      id="commission"
-                      value={`LKR ${selectedWithdrawal.commission}`}
+                      id="currentStatus"
+                      value={selectedWithdrawal.status || "N/A"}
                       readOnly
                       className="bg-light"
                     />
                   </FormGroup>
                 </Col>
-                <Col md="12">
+                <Col md="6">
                   <FormGroup>
-                    <Label for="totalAmount">Total Withdraw Amount</Label>
+                    <Label for="eventId">Event ID</Label>
                     <Input
                       type="text"
-                      id="totalAmount"
-                      value={`LKR ${selectedWithdrawal.totalWithdrawAmount}`}
+                      id="eventId"
+                      value={selectedWithdrawal.event_id || "N/A"}
+                      readOnly
+                      className="bg-light"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col md="6">
+                  <FormGroup>
+                    <Label for="partnerId">Partner ID</Label>
+                    <Input
+                      type="text"
+                      id="partnerId"
+                      value={selectedWithdrawal.partner_id || "N/A"}
                       readOnly
                       className="bg-light"
                     />
@@ -496,21 +550,34 @@ const WithdrawFunds = () => {
                     <Input
                       type="textarea"
                       id="note"
-                      value={selectedWithdrawal.note}
+                      value={selectedWithdrawal.note || "N/A"}
                       readOnly
                       className="bg-light"
                       rows="3"
                     />
                   </FormGroup>
                 </Col>
-                <Col md="12">
+                <Col md="6">
                   <FormGroup>
-                    <Label for="transactionId">Transaction Receipt ID</Label>
+                    <Label for="createdAt">Created At</Label>
                     <Input
                       type="text"
-                      id="transactionId"
-                      value={selectedWithdrawal.transactionReceiptId}
-                      placeholder="Enter transaction receipt ID"
+                      id="createdAt"
+                      value={selectedWithdrawal.created_at ? new Date(selectedWithdrawal.created_at).toLocaleString() : "N/A"}
+                      readOnly
+                      className="bg-light"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col md="6">
+                  <FormGroup>
+                    <Label for="processedAt">Processed At</Label>
+                    <Input
+                      type="text"
+                      id="processedAt"
+                      value={selectedWithdrawal.processed_at ? new Date(selectedWithdrawal.processed_at).toLocaleString() : "Not Processed"}
+                      readOnly
+                      className="bg-light"
                     />
                   </FormGroup>
                 </Col>
@@ -531,11 +598,10 @@ const WithdrawFunds = () => {
                 </Col>
                 <Col md="12">
                   <FormGroup>
-                    <Label for="status">Status</Label>
+                    <Label for="status">Update Status</Label>
                     <Input type="select" id="status" defaultValue={selectedWithdrawal.status}>
                       <option value="">Select...</option>
                       <option value="PENDING">Pending</option>
-                      <option value="APPROVED">Approved</option>
                       <option value="TRANSFERRED">Transferred</option>
                       <option value="REJECTED">Rejected</option>
                     </Input>

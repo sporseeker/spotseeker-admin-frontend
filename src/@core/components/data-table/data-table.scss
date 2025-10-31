@@ -1,0 +1,70 @@
+
+.react-dataTable {
+  /* Dropdown menu styling  */
+  .rdt_Pagination select {
+    font-family: 'Roboto Condensed', sans-serif !important;
+    color: #959595 !important;
+    font-size: 16px !important;
+    font-weight: normal !important;
+  }
+
+  /* Focus state for select element */
+  .rdt_Pagination select:focus {
+    outline-color: #959595 !important;
+    border-color: #959595 !important;
+    box-shadow: 0 0 0 1px #959595 !important;
+  }
+
+  /* React-select dropdown menu */
+  .rdt_Pagination .select__menu {
+    font-family: 'Roboto Condensed', sans-serif !important;
+  }
+
+  .rdt_Pagination .select__menu-list {
+    font-family: 'Roboto Condensed', sans-serif !important;
+  }
+
+  .rdt_Pagination .select__option {
+    font-family: 'Roboto Condensed', sans-serif !important;
+    color: #959595 !important;
+    font-size: 16px !important;
+    font-weight: normal !important;
+  }
+
+  /* Alternative selectors for different dropdown implementations */
+  .rdt_Pagination select option {
+    font-family: 'Roboto Condensed', sans-serif !important;
+    color: #959595 !important;
+    font-size: 16px !important;
+    font-weight: normal !important;
+    background-color: white !important;
+  }
+
+  /* Pagination text styling */
+  .rdt_Pagination {
+    font-family: 'Roboto Condensed', sans-serif !important;
+    color: #959595 !important;
+    font-size: 16px !important;
+    font-weight: normal !important;
+  }
+
+  .rdt_Pagination * {
+    font-family: 'Roboto Condensed', sans-serif !important;
+  }
+
+  /* Force left alignment for subheader content */
+  .rdt_TableHeader {
+    justify-content: flex-start !important;
+    text-align: left !important;
+  }
+
+  .rdt_TableHeader > div {
+    justify-content: flex-start !important;
+    text-align: left !important;
+  }
+
+
+  .rdt_Table {
+    margin-top: 22px !important;
+  }
+}
