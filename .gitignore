@@ -25,3 +25,7 @@ yarn-error.log*
 .docz
 .eslintcache
 .vscode
+
+.yarn
+
+.yarnrc.yml
