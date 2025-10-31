@@ -57,18 +57,9 @@ export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {
  ** This is completely up to you and how you want to store the token in your frontend application
  *  ? e.g. If you are using cookies to store the application please update this function
  */
-// ** Checks if user is logged in
-// ** Safely get user data from localStorage
-export const getUserData = () => {
-  try {
-    const data = localStorage.getItem("userData")
-    return data ? JSON.parse(data) : null
-  } catch (err) {
-    console.error("Failed to parse userData from localStorage", err)
-    return null
-  }
-}
-export const isUserLoggedIn = () => !!getUserData()
+export const isUserLoggedIn = () => localStorage.getItem("userData")
+export const getUserData = () => JSON.parse(localStorage.getItem("userData"))
+
 /**
  ** This function is used for demo purpose route navigation
  ** In real app you won't need this function because your app will navigate to same route for each users regardless of ability
@@ -78,16 +69,9 @@ export const isUserLoggedIn = () => !!getUserData()
  * @param {String} userRole Role of user
  */
  export const getHomeRouteForLoggedInUser = (userRole) => {
-  if (!userRole) return "/login"
-
-  switch (userRole.toLowerCase()) {
-    case "admin":
-      return DefaultRoute
-    case "user":
-      return "/access-control"
-    default:
-      return "/login"
-  }
+  if (userRole.toLowerCase() === "admin") return DefaultRoute
+  if (userRole.toLowerCase() === "user") return "/access-control"
+  return "/login"
 }
 
 // ** React Select Theme Colors

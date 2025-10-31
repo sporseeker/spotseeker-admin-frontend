@@ -6,15 +6,10 @@ import useJwt from '@src/auth/jwt/useJwt'
 
 const config = useJwt.jwtConfig
 
-// Get initial user from localStorage
 const initialUser = () => {
-  try {
-    const item = window.localStorage.getItem('userData')
-    return item && item !== "undefined" ? JSON.parse(item) : {}
-  } catch (error) {
-    console.error('Error parsing userData from localStorage:', error)
-    return {}
-  }
+  const item = window.localStorage.getItem('userData')
+  //** Parse stored json or if none return initialValue
+  return item ? JSON.parse(item) : {}
 }
 
 export const authSlice = createSlice({
@@ -24,24 +19,23 @@ export const authSlice = createSlice({
   },
   reducers: {
     handleLogin: (state, action) => {
-      const { user, accessToken, refreshToken } = action.payload
-
-      // Update Redux state
-      state.userData = user
-
-      // Save user and tokens in localStorage
-      localStorage.setItem('userData', JSON.stringify(user))
-      localStorage.setItem(config.storageTokenKeyName, accessToken)
-      localStorage.setItem(config.storageRefreshTokenKeyName, refreshToken)
+      state.userData = action.payload
+      //state[config.storageTokenKeyName] = action.payload[config.storageTokenKeyName]
+      //state[config.storageRefreshTokenKeyName] = action.payload[config.storageRefreshTokenKeyName]
+      localStorage.setItem('userData', JSON.stringify(action.payload.data))
+      localStorage.setItem(config.storageTokenKeyName, action.payload.data.token)
+      // localStorage.setItem(config.storageTokenKeyName, JSON.stringify(action.payload.accessToken))
+      // localStorage.setItem(config.storageRefreshTokenKeyName, JSON.stringify(action.payload.refreshToken))
     },
-    handleLogout: (state) => {
+    handleLogout: state => {
       useJwt.logout()
       state.userData = {}
-
-      // Clear localStorage
+      state[config.storageTokenKeyName] = null
+      //state[config.storageRefreshTokenKeyName] = null
+        // ** Remove user, accessToken & refreshToken from localStorage
       localStorage.removeItem('userData')
       localStorage.removeItem(config.storageTokenKeyName)
-      localStorage.removeItem(config.storageRefreshTokenKeyName)
+      //localStorage.removeItem(config.storageRefreshTokenKeyName)
     }
   }
 })
