@@ -1,4 +1,3 @@
-// ** Reactstrap Imports
 import {
   Card,
   CardHeader,
@@ -6,11 +5,7 @@ import {
   CardBody,
   Col,
   Button,
-  Row,
-  CardDeck,
   Input,
-  InputGroup,
-  InputGroupText,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
@@ -24,6 +19,7 @@ import {
 } from "reactstrap"
 // import Select from "react-select"
 import { useEffect, useMemo, useState } from "react"
+import { useSearchParams } from "react-router-dom"
 import './partners.scss'
 // import EventService from "@services/EventService"
 // import { Link } from "react-router-dom"
@@ -32,12 +28,13 @@ import { Download, MoreVertical, Edit, Trash2, Mail, Phone, Eye } from "react-fe
 // import { Download, Mail } from "react-feather"
 import SpinnerComponent from "../../../@core/components/spinner/Fallback-spinner"
 // import { dummyEvents, dummyInvitations } from "./constants"
-import { dummyPartners } from "./constants"
+// import { dummyPartners } from "./constants"
 import CustomDataTable from "@components/data-table"
 import IconInput from '@components/icon-input'
+import PartnershipAgreementsService from "@services/PartnershipAgreementsService"
 
 
-const ActionsDropdown = ({ row, onEdit }) => {
+const ActionsDropdown = ({ row, onEdit, isLastRow = false }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
   const toggle = () => setDropdownOpen(prevState => !prevState)
@@ -54,7 +51,7 @@ const ActionsDropdown = ({ row, onEdit }) => {
 
   return (
     <div style={{ width: '50px', display: 'flex', justifyContent: 'center' }}>
-      <Dropdown isOpen={dropdownOpen} toggle={toggle} direction="left">
+      <Dropdown isOpen={dropdownOpen} toggle={toggle} direction={isLastRow ? "up" : "left"}>
         <DropdownToggle
           tag="div"
           style={{
@@ -103,11 +100,25 @@ const ActionsDropdown = ({ row, onEdit }) => {
 
 const BecomeAPartner = () => {
   // const [events, setEvents] = useState([])
+  const [searchParams, setSearchParams] = useSearchParams()
   const [partnerData, setPartnerData] = useState([])
   const [pending, setPending] = useState(true)
   const [filterText, setFilterText] = useState("")
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [selectedPartner, setSelectedPartner] = useState(null)
+
+  // Get page from URL query parameter
+  const urlPage = searchParams.get('page')
+  const currentPageFromUrl = urlPage ? parseInt(urlPage) : 1
+  
+  // Get pageSize from URL or default to 10
+  const urlPageSize = searchParams.get('limit')
+  const defaultPageSize = urlPageSize ? parseInt(urlPageSize) : 10
+  
+  // Pagination state 
+  const [currentPage, setCurrentPage] = useState(currentPageFromUrl - 1)
+  const [totalRecords, setTotalRecords] = useState(0)
+  const [pageSize, setPageSize] = useState(defaultPageSize)
 
   // Form state for sidebar
   const [form, setForm] = useState({
@@ -120,18 +131,72 @@ const BecomeAPartner = () => {
     sendWhatsApp: false
   })
 
+  const fetchData = async (page = 0, limit = pageSize) => {
+    try {
+      setPending(true)
+      const response = await PartnershipAgreementsService.getAllEventOrganizersRequests(page, limit)
+
+      console.log("Fetched partner data:", response)
+      const requestsArray = response.data.requests || response.data || []
+      setPartnerData(requestsArray)
+      setTotalRecords(response.data.total || 0)
+      setPending(false)
+    } catch (error) {
+      console.error("Error fetching partner data:", error)
+      setPending(false)
+    }
+  }
+
+  // Fetch all data for CSV download
+  const fetchAllData = async () => {
+    try {
+     
+      const countResponse = await PartnershipAgreementsService.getAllEventOrganizersRequests(0, 1)
+      const totalRecords = countResponse.data.total || 0
+      
+      if (totalRecords === 0) {
+        return []
+      }
+      
+      
+      const response = await PartnershipAgreementsService.getAllEventOrganizersRequests(0, totalRecords)
+      
+      console.log("Fetched all partner data for CSV:", response)
+      const allRequestsArray = response.data.requests || response.data || []
+      return allRequestsArray
+    } catch (error) {
+      console.error("Error fetching all partner data:", error)
+      return []
+    }
+  }
+
   useEffect(() => {
-    // Using dummy data
-    setPartnerData(dummyPartners)
-    setPending(false)
-  }, [])
+    fetchData(currentPage, pageSize)
+  }, [currentPage, pageSize])
+
+  // Handle URL query parameter changes
+  useEffect(() => {
+    const urlPage = searchParams.get('page')
+    const urlLimit = searchParams.get('limit')
+    
+    const pageFromUrl = urlPage ? parseInt(urlPage) : 1
+    const limitFromUrl = urlLimit ? parseInt(urlLimit) : 10
+    
+    const backendPage = pageFromUrl - 1
+    
+    // If URL parameters don't match current state, update state
+    if (backendPage !== currentPage || limitFromUrl !== pageSize) {
+      setCurrentPage(backendPage)
+      setPageSize(limitFromUrl)
+    }
+  }, [searchParams, currentPage, pageSize])
 
   // Open sidebar with partner data
   function openSidebar(partner) {
     setSelectedPartner(partner)
     setForm({
       email: partner.email || "",
-      phone: partner.phone || "",
+      phone: partner.mobile || "", 
       password: "",
       confirmPassword: "",
       status: partner.status || "",
@@ -154,19 +219,25 @@ const BecomeAPartner = () => {
     if (!selectedPartner) return
 
     setPartnerData(prev => prev.map(p => {
-      if (p.orderId === selectedPartner.orderId) {
+      if (p.id === selectedPartner.id) { 
         return {
           ...p,
           email: form.email,
-          phone: form.phone,
+          mobile: form.phone,  
           status: form.status
         }
       }
       return p
     }))
 
-    // In a real app you'd call an API here and optionally send email/whatsapp
+    
     closeSidebar()
+  }
+
+  let filteredItems = []
+  if (Array.isArray(partnerData)) {
+    // For server-side pagination, search on current page data only
+    filteredItems = filterText ? partnerData.filter(item => JSON.stringify(item).toLowerCase().indexOf(filterText.toLowerCase()) !== -1) : partnerData
   }
 
   const columns = [
@@ -174,26 +245,26 @@ const BecomeAPartner = () => {
       name: "ID",
       minWidth: "120px",
       sortable: true,
-      selector: (row) => row.orderId
+      selector: (row) => row.id || 'N/A'
     },
     {
       name: "Email",
       minWidth: "200px",
       sortable: true,
-      selector: (row) => row.email
+      selector: (row) => row.email || 'N/A'
     },
     {
       name: "Phone",
       minWidth: "150px",
       sortable: true,
-      selector: (row) => row.phone
+      selector: (row) => row.mobile || 'N/A'
     },
-    {
-      name: "Password",
-      minWidth: "150px",
-      sortable: true,
-      selector: () => "••••••••" // Masked password
-    },
+    // {
+    //   name: "Password",
+    //   minWidth: "150px",
+    //   sortable: true,
+    //   selector: () => "••••••••" // Masked password
+    // },
     {
       name: "Status",
       minWidth: "100px",
@@ -201,17 +272,31 @@ const BecomeAPartner = () => {
       cell: (row) => {
         let backgroundColor = '#82868B' 
         let text = 'Unknown'
+        const status = (row.status || '').toUpperCase()
 
-        switch (row.status) {
-          case 'pending':
-            backgroundColor = '#FF9F43' 
-            text = 'Pending'
+        switch (status) {
+          case 'EMAIL_SUBMITTED':
+            backgroundColor = '#00CFE8' 
+            text = 'Email Submitted'
             break
-          case 'approved':
+          case 'MOBILE_SUBMITTED':
+            backgroundColor = '#7367F0' 
+            text = 'Mobile Submitted'
+            break
+          case 'OTP_VERIFIED':
             backgroundColor = '#28C76F'
+            text = 'OTP Verified'
+            break
+          case 'PENDING_APPROVAL':
+          case 'PENDING':
+            backgroundColor = '#FF9F43' 
+            text = 'Pending Approval'
+            break
+          case 'APPROVED':
+            backgroundColor = '#28C76F' 
             text = 'Approved'
             break
-          case 'rejected':
+          case 'REJECTED':
             backgroundColor = '#EA5455' 
             text = 'Rejected'
             break
@@ -224,7 +309,7 @@ const BecomeAPartner = () => {
           <div
             style={{
               height: '28px',
-              width: '68px',
+              width: '103px',
               backgroundColor,
               color: '#FFFFFF',
               display: 'flex',
@@ -232,8 +317,11 @@ const BecomeAPartner = () => {
               justifyContent: 'center',
               borderRadius: '4px',
               fontFamily: 'Roboto Condensed, sans-serif',
-              fontSize: '14px',
-              fontWeight: '500'
+              fontSize: '13px',
+              fontWeight: '500',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
             }}
           >
             {text}
@@ -244,7 +332,7 @@ const BecomeAPartner = () => {
     {
       name: "",
       width: "50px",
-      cell: (row) => <ActionsDropdown row={row} onEdit={openSidebar} />
+      cell: (row, index) => <ActionsDropdown row={row} onEdit={openSidebar} isLastRow={index === filteredItems.length - 1} />
     }
   ]
 
@@ -301,10 +389,6 @@ const BecomeAPartner = () => {
     link.click()
   }
 
-  const filteredItems = partnerData.filter(
-    item => JSON.stringify(item).toLowerCase().indexOf(filterText.toLowerCase()) !== -1
-  )
-
   const subHeaderComponent = useMemo(() => {
 
     return (
@@ -341,7 +425,10 @@ const BecomeAPartner = () => {
               color: '#FFFFFF',
               padding: 0
             }}
-            onClick={() => setFilterText('')}
+            onClick={() => {
+              setFilterText('')
+              fetchData(currentPage, pageSize)  // Refetch current page data
+            }}
           >
             Reset
           </Button>
@@ -375,13 +462,11 @@ const BecomeAPartner = () => {
               className="ms-2"
               color="primary"
               style={{ height: '39px' }}
-              onClick={() => downloadCSV(partnerData)}>
-              <Download 
-                size={18} 
-                style={{ 
-                  color: window.innerWidth <= 576 ? '#EA5455' : '#FFFFFF' 
-                }} 
-              />
+              onClick={async () => {
+                const allData = await fetchAllData()
+                downloadCSV(allData)
+              }}>
+              <Download size={18} style={{ color: window.innerWidth <= 576 ? '#EA5455' : '#FFFFFF' }} />
               <span
                 className="align-middle ms-50 d-none d-sm-inline"
                 style={{
@@ -400,8 +485,44 @@ const BecomeAPartner = () => {
       <CardBody style={{ padding: '1px' }}>
         <CustomDataTable
           columns={columns}
-          data={filteredItems}
+          data={filteredItems}  // Use filtered data for search functionality
           pagination
+          paginationServer  // Enable server-side pagination
+          paginationTotalRows={totalRecords}  
+          paginationPerPage={pageSize}  
+          paginationDefaultPage={currentPage + 1}  
+          onChangePage={(page) => {
+            const newPage = page - 1
+            setCurrentPage(newPage)
+            setFilterText('')  // Clear search when changing pages
+           
+            if (page === 1) {
+              // Remove page parameter for first page
+              const params = {}
+              if (pageSize !== 10) params.limit = pageSize.toString()
+              setSearchParams(params, { replace: true })
+            } else {
+              // Set page parameter for pages 2 and above
+              const params = { page: page.toString() }
+              if (pageSize !== 10) params.limit = pageSize.toString()
+              setSearchParams(params)
+            }
+          }}
+          onChangeRowsPerPage={(newPerPage) => {
+            setPageSize(newPerPage)
+            setCurrentPage(0) // Reset to first page
+            setFilterText('') // Clear search
+            
+           
+            const params = {}
+            if (currentPageFromUrl > 1) {
+              params.page = currentPageFromUrl.toString()
+            }
+            if (newPerPage !== 10) {
+              params.limit = newPerPage.toString()
+            }
+            setSearchParams(params, { replace: true })
+          }}
           progressPending={pending}
           progressComponent={<SpinnerComponent />}
           subHeader
@@ -423,7 +544,7 @@ const BecomeAPartner = () => {
         >
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <div style={{ fontFamily: 'Roboto Condensed, sans-serif', color: '#6A6775', fontSize: '20px', fontWeight: '500' }}>
-              Edit Partner {selectedPartner ? `#${selectedPartner.orderId}` : ''}
+              Edit Partner {selectedPartner ? `#${selectedPartner.id}` : ''}  
             </div>
           </div>
         </OffcanvasHeader>
@@ -467,21 +588,24 @@ const BecomeAPartner = () => {
             <FormGroup style={{ marginBottom: 0 }}>
               <Label for="status" style={{ fontFamily: 'Roboto Condensed, sans-serif', color: '#6A6775', fontSize: '16px', fontWeight: '400' }}>Status</Label>
               <Input type="select" id="status" name="status" value={form.status} onChange={e => handleFormChange('status', e.target.value)}>
-                <option value="">Select....</option>
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
+                <option value="">Select Status...</option>
+                <option value="EMAIL_SUBMITTED">Email Submitted</option>
+                <option value="MOBILE_SUBMITTED">Mobile Submitted</option>
+                <option value="OTP_VERIFIED">OTP Verified</option>
+                <option value="PENDING_APPROVAL">Pending Approval</option>
+                <option value="APPROVED">Approved</option>
+                <option value="REJECTED">Rejected</option>
               </Input>
             </FormGroup>
             <FormGroup check style={{ marginBottom: 0 }}>
               <Label check style={{ fontFamily: 'Roboto Condensed, sans-serif', color: '#6A6775', fontSize: '16px', fontWeight: '400' }}>
-                <Input type="checkbox" checked={form.sendEmail} onChange={e => handleFormChange('sendEmail', e.target.checked)} />{' '}
+                <Input type="checkbox" checked={form.sendEmail} onChange={e => handleFormChange('sendEmail', e.target.checked)} style={{ cursor: 'pointer' }} />{' '}
                 Send Email
               </Label>
             </FormGroup>
             <FormGroup check style={{ marginBottom: 0 }}>
               <Label check style={{ fontFamily: 'Roboto Condensed, sans-serif', color: '#6A6775', fontSize: '16px', fontWeight: '400' }}>
-                <Input type="checkbox" checked={form.sendWhatsApp} onChange={e => handleFormChange('sendWhatsApp', e.target.checked)} />{' '}
+                <Input type="checkbox" checked={form.sendWhatsApp} onChange={e => handleFormChange('sendWhatsApp', e.target.checked)} style={{ cursor: 'pointer' }} />{' '}
                 Send WhatsApp
               </Label>
             </FormGroup>
