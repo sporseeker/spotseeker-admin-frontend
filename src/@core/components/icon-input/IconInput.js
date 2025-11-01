@@ -14,6 +14,8 @@ const IconInput = ({
   placeholder = '',
   readOnly = false,
   required = false,
+  onIconClick,
+  error,
   ...props
 }) => {
   return (
@@ -29,7 +31,7 @@ const IconInput = ({
       >
         {label}
       </Label>
-      <InputGroup>
+      <InputGroup className={readOnly ? 'read-only-input-group' : ''}>
         <InputGroupText
           style={{
             width: '60px',
@@ -37,8 +39,10 @@ const IconInput = ({
             alignItems: 'center',
             justifyContent: 'center',
             borderRight: '0',
-            background: '#fff'
+            background: '#fff',
+            cursor: onIconClick ? 'pointer' : 'default'
           }}
+          onClick={onIconClick}
         >
           <IconComponent size={iconSize} color={iconColor} />
         </InputGroupText>
@@ -51,13 +55,29 @@ const IconInput = ({
           placeholder={placeholder}
           readOnly={readOnly}
           required={required}
+          invalid={!!error}
           style={{
             borderTopLeftRadius: 0,
-            borderBottomLeftRadius: 0
+            borderBottomLeftRadius: 0,
+            backgroundColor: '#fff',
+            cursor: readOnly ? 'default' : 'text',
+            caretColor: readOnly ? 'transparent' : 'auto'
           }}
+          className={readOnly ? 'read-only-input' : ''}
           {...props}
         />
       </InputGroup>
+      {error && (
+        <div style={{
+          color: '#EA5455',
+          fontSize: '14px',
+          fontFamily: 'Roboto Condensed, sans-serif',
+          marginTop: '4px',
+          marginLeft: '4px'
+        }}>
+          {error}
+        </div>
+      )}
     </FormGroup>
   )
 }
