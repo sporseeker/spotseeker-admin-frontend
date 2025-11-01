@@ -2,7 +2,7 @@ import axios from "axios"
 
 // Main API instance
 const TMApi = axios.create({
-  baseURL: process.env.REACT_APP_BASE_API, // e.g. https://api.spotseeker.lk/
+  baseURL: process.env.REACT_APP_BASE_API,
   headers: {
     "X-Requested-With": "XMLHttpRequest",
     Accept: "application/json"
@@ -12,7 +12,7 @@ const TMApi = axios.create({
 
 // Auth API instance
 const AuthApi = axios.create({
-  baseURL: process.env.REACT_APP_BASE_API_login, // e.g. https://auth.spotseeker.lk/
+  baseURL: process.env.REACT_APP_BASE_API_LOGIN,
   headers: {
     "X-Requested-With": "XMLHttpRequest",
     Accept: "application/json"

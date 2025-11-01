@@ -8,7 +8,7 @@ const config = useJwt.jwtConfig
 
 const initialUser = () => {
   const item = window.localStorage.getItem('userData')
-  //** Parse stored json or if none return initialValue
+  // ** Parse stored JSON or return empty object
   return item ? JSON.parse(item) : {}
 }
 
@@ -19,23 +19,38 @@ export const authSlice = createSlice({
   },
   reducers: {
     handleLogin: (state, action) => {
-      state.userData = action.payload
-      //state[config.storageTokenKeyName] = action.payload[config.storageTokenKeyName]
-      //state[config.storageRefreshTokenKeyName] = action.payload[config.storageRefreshTokenKeyName]
-      localStorage.setItem('userData', JSON.stringify(action.payload.data))
-      localStorage.setItem(config.storageTokenKeyName, action.payload.data.token)
-      // localStorage.setItem(config.storageTokenKeyName, JSON.stringify(action.payload.accessToken))
-      // localStorage.setItem(config.storageRefreshTokenKeyName, JSON.stringify(action.payload.refreshToken))
+      const userData = action.payload.data
+
+      // ✅ Store user data in Redux state
+      state.userData = userData
+
+      // ✅ Persist user data
+      localStorage.setItem('userData', JSON.stringify(userData))
+
+      // ✅ Store both tokens separately
+      if (userData.accessToken) {
+        // From Base API
+        localStorage.setItem(config.storageTokenKeyName, userData.accessToken)
+      }
+
+      if (userData.token) {
+        // From Login API
+        localStorage.setItem('userToken', userData.token)
+      }
     },
+
     handleLogout: state => {
+      // Logout API call
       useJwt.logout()
+
+      // Clear state
       state.userData = {}
       state[config.storageTokenKeyName] = null
-      //state[config.storageRefreshTokenKeyName] = null
-        // ** Remove user, accessToken & refreshToken from localStorage
+
+      // ✅ Remove user data and tokens
       localStorage.removeItem('userData')
-      localStorage.removeItem(config.storageTokenKeyName)
-      //localStorage.removeItem(config.storageRefreshTokenKeyName)
+      localStorage.removeItem(config.storageTokenKeyName) // accessToken
+      localStorage.removeItem('userToken') // user token
     }
   }
 })
