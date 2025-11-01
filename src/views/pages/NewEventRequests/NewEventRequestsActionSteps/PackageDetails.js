@@ -9,7 +9,7 @@ import { X, Plus, ArrowLeft, ArrowRight } from "react-feather"
 import Select from 'react-select'
 import Flatpickr from 'react-flatpickr'
 // ** Reactstrap Imports
-import { Label, Row, Col, Button, Form, Input, CardBody } from "reactstrap"
+import { Label, Row, Col, Button, Form, Input, CardBody, Alert } from "reactstrap"
 
 const PackageDetails = ({ stepper, productData, handleChange, handlePackageAdd, handlePackageRemove, handleDropdownChange }) => {
 
@@ -48,18 +48,28 @@ const PackageDetails = ({ stepper, productData, handleChange, handlePackageAdd, 
         { value: 'closed', label: 'Closed' }
     ]
 
+    // Check if all packages are empty
+    const hasPackageData = packs.some(pack => pack.packageName || pack.packagePrice || pack.packageQty || pack.packageStatus || pack.releasingDate || pack.closingDate)
+
     return (
         <Fragment>
             <Form>
+                <Col md={4}>
+                    <h4 style={{ fontSize: '20px', marginBottom: '20px' }}>Packages</h4>
+                </Col>
                 <Row>
                     <Col md="12" className="mb-1">
                         <CardBody>
 
-                            {
+                            {!hasPackageData ? (
+                                <div className="text-center py-3">
+                                    <h5 className="mb-0" style={{ fontSize: '18px' }}>No Package Data Available</h5>
+                                </div>
+                            ) : (
                                 packs.map((pack, i) => {
                                     return (
 
-                                        <Row className="mb-1">
+                                        <Row className="mb-1" key={i}>
                                             <Col md={12}>
                                                 <Row>
                                                     <Col md={4} className="mb-md-0 mb-1">
@@ -164,7 +174,7 @@ const PackageDetails = ({ stepper, productData, handleChange, handlePackageAdd, 
                                         </Row>
                                     )
                                 })
-                            }
+                            )}
                             
                         </CardBody>
                     </Col>

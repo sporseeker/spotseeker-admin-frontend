@@ -5,7 +5,10 @@ import { Fragment, useEffect, useState } from 'react'
 // ** Reactstrap
 import { Row, Col, Label, Input, Button } from 'reactstrap'
 
-const PromotionDetails = ({ stepper, productData = {}, onChange }) => {
+// ** Icons
+import { ArrowLeft, ArrowRight } from 'react-feather'
+
+const PromotionDetails = ({ stepper, productData = {} }) => {
     // Initialize local toggle state from productData if available
     const [promos, setPromos] = useState({
         presales: false,
@@ -23,16 +26,6 @@ const PromotionDetails = ({ stepper, productData = {}, onChange }) => {
         }
     }, [productData])
 
-    const handleToggle = (key, checked) => {
-        const next = { ...promos, [key]: checked }
-        setPromos(next)
-
-        // If parent provided an onChange handler, notify it in a simple synthetic event shape
-        if (typeof onChange === 'function') {
-            onChange({ target: { name: `promotions.${key}`, value: checked } })
-        }
-    }
-
     const onNext = () => {
         if (stepper && typeof stepper.next === 'function') stepper.next()
     }
@@ -40,7 +33,7 @@ const PromotionDetails = ({ stepper, productData = {}, onChange }) => {
     return (
         <Fragment>
             <div className="content-header">
-                <h5 className="mb-0">Promotions</h5>
+                <h5 className="mb-0" style={{ fontFamily: 'Roboto Condensed', fontSize: '20px', fontWeight: 500, color: '#6A6775' }}>Promotions</h5>
             </div>
 
             <Row className="mt-2">
@@ -53,26 +46,50 @@ const PromotionDetails = ({ stepper, productData = {}, onChange }) => {
                 ].map(({ key, label }) => (
                     <Col xs="12" key={key} className="mb-1">
                         <div className="d-flex align-items-center justify-content-between">
-                            <Label className="mb-0" for={`promotions-${key}`}>{label}</Label>
+                            <Label className="mb-0" for={`promotions-${key}`} style={{ fontFamily: 'Roboto Condensed', fontSize: '18px', fontWeight: 500, color: '#6A6775' }}>{label}</Label>
                             <div className="form-check form-switch">
                                 <Input
                                     type="checkbox"
                                     id={`promotions-${key}`}
                                     className="form-check-input"
                                     checked={!!promos[key]}
-                                    onChange={e => handleToggle(key, e.target.checked)}
+                                    readOnly
+                                    style={{ cursor: 'not-allowed', pointerEvents: 'none' }}
                                     aria-label={label}
                                 />
                             </div>
                         </div>
                     </Col>
                 ))}
-
-                <Col xs="12" className="mt-2 d-flex justify-content-end">
-                    <Button color="secondary" className="me-1" onClick={() => stepper && stepper.previous && stepper.previous()}>Previous</Button>
-                    <Button color="primary" onClick={onNext}>Next</Button>
-                </Col>
             </Row>
+
+            <div className="d-flex justify-content-between">
+                <Button
+                    color="primary"
+                    className="btn-prev"
+                    onClick={() => stepper && stepper.previous && stepper.previous()}
+                >
+                    <ArrowLeft
+                        size={14}
+                        className="align-middle me-sm-25 me-0"
+                    ></ArrowLeft>
+                    <span className="align-middle d-sm-inline-block d-none">
+                        Previous
+                    </span>
+                </Button>
+                <Button
+                    type="button"
+                    color="primary"
+                    className="btn-next"
+                    onClick={onNext}
+                >
+                    <span className="align-middle d-sm-inline-block d-none">Next</span>
+                    <ArrowRight
+                        size={14}
+                        className="align-middle ms-sm-25 ms-0"
+                    ></ArrowRight>
+                </Button>
+            </div>
         </Fragment>
     )
 }

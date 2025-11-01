@@ -6,6 +6,7 @@ const EventInvitations = lazy(() => import('../../views/pages/invitations/Invita
 const EventInvitationsSend = lazy(() => import('../../views/pages/invitations/SendInvitations'))
 const NewEventRequests = lazy(() => import('../../views/pages/partners/NewEventRequests'))
 const EventRequests = lazy(() => import('../../views/pages/partners/EventRequests'))
+const EventRequestsAction = lazy(() => import('../../views/pages/NewEventRequests/NewEventRequestsAction'))
 
 const EventsRoutes = [
   {
@@ -51,6 +52,14 @@ const EventsRoutes = [
   {
     path: '/events/requests/list',
     element: <EventRequests />,
+    meta: {
+      publicRoute: false,
+      restricted: false
+    }
+  },
+  {
+    path: '/event-requests/action',
+    element: <EventRequestsAction />,
     meta: {
       publicRoute: false,
       restricted: false

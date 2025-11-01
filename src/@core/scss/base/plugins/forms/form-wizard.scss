@@ -61,6 +61,7 @@ $step-box-width: 38px;
             font-weight: 600;
             line-height: 1rem;
             margin-bottom: 0rem;
+            font-size: 18px;
           }
 
           .bs-stepper-subtitle {
@@ -256,6 +257,11 @@ $step-box-width: 38px;
 }
 
 // RTl
+.btn-prev,
+.btn-next {
+  font-size: 18px;
+}
+
 html[data-textdirection='rtl'] {
   .btn-prev,
   .btn-next {
