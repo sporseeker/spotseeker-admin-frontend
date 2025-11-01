@@ -9,10 +9,11 @@ module.exports = {
           includePaths: ['node_modules', 'src/assets']
         }
       }
-    },
-    postcss: {
-      plugins: [require('postcss-rtl')()]
     }
+    // Temporarily disabled postcss-rtl due to compatibility issues
+    // postcss: {
+    //   plugins: [require('postcss-rtl')()]
+    // }
   },
   webpack: {
     alias: {
