@@ -1,11 +1,12 @@
 import { TMApi } from "../api/calls"
+import { CopilotApi } from "../api/copilotAPI"
 
 const url = '/api'
 
 class EventRequstsService {
   // Get all event organizers with pagination
   getAllEventOrganizers(page = 0, limit = 10) {
-    return TMApi.get(`${url}/events`, {
+    return CopilotApi.get(`${url}/events`, {
       params: {
         page,
         limit
@@ -13,7 +14,7 @@ class EventRequstsService {
     })
   }
 getAllEventOrganizersAdmin(page = 0, limit = 10) {
-    return TMApi.get(`${url}/admin/events`, {
+    return CopilotApi.get(`${url}/admin/events`, {
       params: {
         page,
         limit
