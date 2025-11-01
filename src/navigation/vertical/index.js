@@ -83,7 +83,7 @@ export default [
     id: "new-event-requests",
     title: "New Event Requests",
     icon: <List size={12} />,
-    navLink: "/events/requests/new"
+    navLink: "/new-event-requests/new"
   },
   {
     id: "event-requests",

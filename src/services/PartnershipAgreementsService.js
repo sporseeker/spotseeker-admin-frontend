@@ -17,7 +17,18 @@ class PartnershipAgreementsService {
   getEventOrganizer(id) {
     return TMApi.get(`${url}/partners/${id}`)
   }
-
+  
+    // Get all event organizers with pagination
+    getAllEventOrganizersRequests(page = 0, limit = 10) {
+      return TMApi.get(`${url}/partner-requests`, {
+        params: {
+          page,
+          limit
+        }
+      })
+    
+  }
+  
   // Update event organizer status
   updateEventOrganizerStatus(id, status) {
     return TMApi.put(`${url}/partners/${id}/status`, {

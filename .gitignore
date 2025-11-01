@@ -26,8 +26,12 @@ yarn-error.log*
 .eslintcache
 .vscode
 
+yarn.lock
+
 .yarn
 
 .yarnrc.yml
 
-yarn.lock
+.env
+
+
