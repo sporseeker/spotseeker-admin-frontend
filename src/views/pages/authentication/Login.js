@@ -1,45 +1,17 @@
-// ** React Imports
 import { useContext, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-
-// ** Auth
 import useJwt from "@src/auth/jwt/useJwt"
-
-// ** Third Party Components
 import toast from "react-hot-toast"
 import { useDispatch } from "react-redux"
 import { useForm, Controller } from "react-hook-form"
 import { AlertTriangle, Coffee, X } from "react-feather"
-
-// ** Actions
 import { handleLogin } from "@store/authentication"
-
-// ** Context
 import { AbilityContext } from "@src/utility/context/Can"
-
-// ** Custom Components
 import Avatar from "@components/avatar"
 import InputPasswordToggle from "@components/input-password-toggle"
-
-// ** Utils
 import { getHomeRouteForLoggedInUser } from "@utils"
-
-// ** Reactstrap Imports
-import {
-  Row,
-  Col,
-  Form,
-  Input,
-  Label,
-  Button,
-  CardText,
-  CardTitle
-} from "reactstrap"
-
-// ** Config
+import { Row, Col, Form, Input, Label, Button, CardText, CardTitle } from "reactstrap"
 import themeConfig from "@configs/themeConfig"
-
-// ** Styles
 import "@styles/react/pages/page-authentication.scss"
 
 const ToastContent = ({ t, name, role }) => (
@@ -85,64 +57,55 @@ const Login = () => {
     setPending(true)
 
     try {
-      // ✅ Step 0: Get CSRF cookie (for Sanctum)
+      // ✅ Step 0: Get CSRF (Spotseeker uses Sanctum)
       await useJwt.csrf()
-      console.log("CSRF cookie obtained ✅")
+      console.log("✅ CSRF cookie set")
 
-      // ✅ Step 1: Call BASE API (copilot-backend) to get the token
-      console.log("Calling BASE API for token...")
-      const baseResponse = await useJwt.login({
+      // ✅ Step 1: Call Copilot API first
+      console.log("➡️ Calling Copilot backend...")
+      const copilotRes = await useJwt.copilotLogin({
         email: formData.loginEmail,
         password: formData.password
       })
-      console.log("BASE API response:", baseResponse)
 
-      const accessToken = baseResponse?.data?.token || baseResponse?.data?.accessToken
-      if (!accessToken) throw new Error("Base API did not return accessToken")
+      const accessToken = copilotRes?.data?.token || copilotRes?.data?.accessToken
+      if (!accessToken) throw new Error("Copilot API did not return accessToken")
 
-      // ✅ Step 2: Call LOGIN API (spotseeker) to get user data
-      console.log("Calling LOGIN API for user authentication...")
-      const loginResponse = await useJwt.customLogin({
+      // Save access token in storage
+      localStorage.setItem("accessToken", accessToken)
+
+      // ✅ Step 2: Call Spotseeker API for user authentication
+      console.log("➡️ Calling Spotseeker API /login...")
+      const spotRes = await useJwt.login({
         email: formData.loginEmail,
         password: formData.password
       })
-      console.log("LOGIN API response:", loginResponse)
 
-      const userData = loginResponse?.data?.data || loginResponse?.data
-      if (!userData?.token) throw new Error("Login API did not return user token")
+      const userData = spotRes?.data?.data || spotRes?.data
+      if (!userData) throw new Error("Spotseeker login failed")
 
-      // ✅ Step 3: Combine both
+      // ✅ Step 3: Merge data and dispatch
       const combinedPayload = {
         data: {
           ...userData,
-          accessToken // from BASE API
+          accessToken
         }
       }
 
-      // ✅ Step 4: Store & redirect
-      if (userData.role === "Admin") {
-        dispatch(handleLogin(combinedPayload))
-        ability.update([{ action: "manage", subject: "all" }])
-        navigate(getHomeRouteForLoggedInUser(userData.role))
+      dispatch(handleLogin(combinedPayload))
+      ability.update([{ action: "manage", subject: "all" }])
+      navigate(getHomeRouteForLoggedInUser(userData.role || "Admin"))
 
-        toast(t => (
-          <ToastContent
-            t={t}
-            role={userData.role || "Admin"}
-            name={userData.email || userData.name || "Admin User"}
-          />
-        ))
-      } else {
-        toast(t => (
-          <ToastError
-            t={t}
-            title="Access Denied"
-            message="These credentials are not authorized."
-          />
-        ))
-      }
+      toast(t => (
+        <ToastContent
+          t={t}
+          name={userData.email || userData.name || "Admin"}
+          role={userData.role || "Admin"}
+        />
+      ))
+
     } catch (err) {
-      console.error("Login error:", err)
+      console.error("❌ Login error:", err)
       toast(t => (
         <ToastError
           t={t}
