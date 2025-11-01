@@ -1,44 +1,57 @@
-import { AuthApi, TMApi } from '../../api/calls'
+import { TMApi } from '../../api/calls'
 import jwtDefaultConfig from './jwtDefaultConfig'
-import axios from 'axios'
 
 export default class JwtService {
+  // ** jwtConfig <= Will be used by this service
   jwtConfig = { ...jwtDefaultConfig }
 
-  csrf() {
-    // Sanctum cookie request before login
-    return AuthApi.get('/sanctum/csrf-cookie')
+  // ** For Refreshing Token
+  isAlreadyFetchingAccessToken = false
+
+  // ** For Refreshing Token
+  subscribers = []
+
+  csrf() { return TMApi.get('/sanctum/csrf-cookie') }
+
+  onAccessTokenFetched(accessToken) {
+    this.subscribers = this.subscribers.filter(callback => callback(accessToken))
+  }
+
+  addSubscriber(callback) {
+    this.subscribers.push(callback)
   }
 
   getToken() {
     return localStorage.getItem(this.jwtConfig.storageTokenKeyName)
   }
 
+  getRefreshToken() {
+    return localStorage.getItem(this.jwtConfig.storageRefreshTokenKeyName)
+  }
+
   setToken(value) {
     localStorage.setItem(this.jwtConfig.storageTokenKeyName, value)
   }
 
-  login(...args) {
-    return AuthApi.post(this.jwtConfig.loginEndpoint, ...args)
+  setRefreshToken(value) {
+    localStorage.setItem(this.jwtConfig.storageRefreshTokenKeyName, value)
   }
 
-  async customLogin(params) {
-    const token = process.env.REACT_APP_BASE_API_TOKEN
-    const loginUrl = process.env.REACT_APP_BASE_API_LOGIN
+  login(...args) {
+    return TMApi.post(this.jwtConfig.loginEndpoint, ...args)
+  }
 
-    try {
-      // Sanctum before login
-      await this.csrf()
+  register(...args) {
+    return TMApi.post(this.jwtConfig.registerEndpoint, ...args)
+  }
 
-      const response = await axios.post(`${loginUrl}login`, params, {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true
-      })
+  logout() {
+    return TMApi.post(this.jwtConfig.logoutEndpoint)
+  }
 
-      return { ...response.data, token }
-    } catch (err) {
-      console.error('Custom login error:', err)
-      throw err
-    }
+  refreshToken() {
+    return TMApi.post(this.jwtConfig.refreshEndpoint, {
+      refreshToken: this.getRefreshToken()
+    })
   }
 }

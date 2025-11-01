@@ -1,17 +1,22 @@
-import { AuthApi } from "../api/calls"
+import { TMApi } from "../api/calls"
 
 class AuthService {
-  logout() {
-    return AuthApi.post("/logout")
-  }
 
-  verifyAdminUser(password) {
-    return AuthApi.post("/api/admin/verify", { password })
-  }
+    logout() {
+        return TMApi.post('/logout')
+    }
 
-  sendPasswordResetEmail(email) {
-    return AuthApi.post("/api/reset-password", { email })
-  }
+    verifyAdminUser(password) {
+        return TMApi.post('/api/admin/verify', {
+            password
+        })
+    }
+
+    sendPasswordResetEmail(email) {
+        return TMApi.post('/api/reset-password', {
+            email
+        })
+    }
 }
 
 export default new AuthService()
