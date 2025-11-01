@@ -140,8 +140,12 @@ const BecomeAPartner = () => {
 
   const fetchData = async (page = 0, limit = pageSize) => {
     try {
+      
       setPending(true)
       const response = await PartnershipAgreementsService.getAllEventOrganizersRequests(page, limit)
+
+      console.log(response, "responceeeeeeeeeeeeeeeeeee")
+      
 
       console.log("Fetched partner data:", response)
       const requestsArray = response.data.requests || response.data || []
@@ -178,6 +182,8 @@ const BecomeAPartner = () => {
   }
 
   useEffect(() => {
+    console.log("use effect callinggg")
+    
     fetchData(currentPage, pageSize)
   }, [currentPage, pageSize])
 

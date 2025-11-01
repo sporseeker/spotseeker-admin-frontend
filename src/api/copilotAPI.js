@@ -1,19 +1,16 @@
 import axios from "axios"
 
 const CopilotApi = axios.create({
-  baseURL: process.env.REACT_COPILOT_API_BASE_URL,
+  baseURL: "http://localhost:8081/",
   headers: {
     "X-Requested-With": "XMLHttpRequest",
     Accept: 'application/json' 
-  },
-  withCredentials: true
+  }
 })
 
 CopilotApi.interceptors.request.use(function (config) {
-  config.headers.Authorization = `Bearer ${localStorage.getItem(
-    "accessToken"
-  )}`
-  config.headers.admintoken = process.env.REACT_ADMIN_TOKEN
+  config.headers.Authorization = `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1IiwiZW1haWwiOiJhZG1pbkBjb3BpbG90LmxrIiwidXNlclR5cGUiOiJBRE1JTiIsImlhdCI6MTc2MjAwNjE4NCwiZXhwIjoyNjYyMDA2MTg0fQ.yFQovo85eAs9O1PaKtw2Axhz2sf8Hs-KOuuSVCjhsxkKjchylFUwslXzPaIYeURgnm4fHJSSiRMaFDuaRPbUdQ`
+  config.headers.partnerToken = "1696|gMhKppyPd3qtaKhsBe2PVQ7MTwmFJcfY0U8wimv56e38385c"
   return config
 })
 

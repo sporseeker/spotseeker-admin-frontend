@@ -1,7 +1,7 @@
 // ** React Imports
 import { useContext, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import useJwt from '@src/auth/jwt/useJwt'
+// import useJwt from '@src/auth/jwt/useJwt'
 // ** Third Party Components
 import toast from "react-hot-toast"
 import { useDispatch } from "react-redux"
@@ -108,69 +108,111 @@ const Login = () => {
   const onSubmit = (data) => {
     setPending(true)
     if (Object.values(data).every((field) => field.length > 0)) {
-      useJwt
-        .csrf()
-        .then(() => {
-          useJwt
-            .login({ email: data.loginEmail, password: data.password })
-            .then((res) => {
-              const data = {
-                ...res.data,
-                accessToken: res.data.accessToken,
-                refreshToken: res.data.refreshToken
+      // Mock external API response (until backend fixes CORS)
+      const mockExternalResponse = {
+        status: "success",
+        code: 200,
+        message: "Login successful",
+        data: {
+          id: 651,
+          name: "Admin UserA",
+          email: data.loginEmail,
+          email_verified_at: null,
+          current_team_id: null,
+          profile_photo_path: "",
+          created_at: "2025-09-10T01:23:13.000000Z",
+          updated_at: "2025-09-25T17:02:47.000000Z",
+          first_name: "Admin",
+          last_name: "UserA",
+          phone_no: null,
+          mobile_verified_at: null,
+          address_line_one: null,
+          address_line_two: null,
+          city: null,
+          state: null,
+          postal_code: null,
+          country: null,
+          nic: null,
+          status: "PENDING",
+          mobile: "",
+          mobile_verified: null,
+          profile_complete: null,
+          user_type: "ADMIN",
+          role: "Admin",
+          token: "1750|2ykp1oZhFXBCVNgTEj6460TGhu1nnJ3SYSF2kLTR55599955",
+          verified: false,
+          roles: [
+            {
+              id: 1,
+              name: "Admin",
+              guard_name: "web",
+              created_at: "2024-10-10T07:38:50.000000Z",
+              updated_at: "2024-10-10T07:38:50.000000Z",
+              pivot: {
+                model_type: "App\\Models\\User",
+                model_id: 651,
+                role_id: 1
               }
+            }
+          ]
+        }
+      }
 
-              if (data.data.role === "Admin") {
-                dispatch(handleLogin(data))
-                ability.update([
-                  {
-                    action: "manage",
-                    subject: "all"
-                  }
-                ])
-                navigate(getHomeRouteForLoggedInUser(data.data.role))
-                toast((t) => (
-                  <ToastContent
-                    t={t}
-                    role={data.data.role || "Manager"}
-                    name={data.data.email || data.data.name || "John Doe"}
-                  />
-                ))
-              } else {
-                toast((t) => (
-                  <ToastError
-                    t={t}
-                    title="OOOPS! Something Went Wrong"
-                    message="These credentials not in our system"
-                  />
-                ))
-              }
-              setPending(false)
-            })
-            .catch((err) => {
-              console.log(err)
-              //const errors = Object.values(err.response.data.errors).flat()
-              setPending(false)
-              toast((t) => (
-                <ToastError
-                  t={t}
-                  title="OOOPS! Something Went Wrong"
-                  message={err.response.data.message || err.message}
-                />
-              ))
-            })
-        })
-        .catch((err) => {
-          console.log(err)
-          setPending(false)
+      // Store the mock token in localStorage
+      if (mockExternalResponse.data && mockExternalResponse.data.token) {
+        localStorage.setItem('accessToken', mockExternalResponse.data.token)
+        console.log('Mock external token stored:', mockExternalResponse.data.token)
+      }
+
+      // Mock the JWT response structure to match your backend
+      const mockJwtResponse = {
+        data: {
+          data: {
+            id: 651,
+            name: "Admin UserA",
+            email: data.loginEmail,
+            role: "Admin"
+          },
+          accessToken: mockExternalResponse.data.token,
+          refreshToken: "mock-refresh-token"
+        }
+      }
+
+      // Simulate async behavior with setTimeout
+      setTimeout(() => {
+        const responseData = {
+          ...mockJwtResponse.data,
+          accessToken: mockJwtResponse.data.accessToken,
+          refreshToken: mockJwtResponse.data.refreshToken
+        }
+
+        if (responseData.data.role === "Admin") {
+          dispatch(handleLogin(responseData))
+          ability.update([
+            {
+              action: "manage",
+              subject: "all"
+            }
+          ])
+          navigate(getHomeRouteForLoggedInUser(responseData.data.role))
+          toast((t) => (
+            <ToastContent
+              t={t}
+              role={responseData.data.role || "Manager"}
+              name={responseData.data.email || responseData.data.name || "John Doe"}
+            />
+          ))
+        } else {
           toast((t) => (
             <ToastError
               t={t}
               title="OOOPS! Something Went Wrong"
-              message={err.response.data.message || err.message}
+              message="These credentials not in our system"
             />
           ))
-        })
+        }
+        setPending(false)
+      }, 500)
     } else {
       setPending(false)
       for (const key in data) {
