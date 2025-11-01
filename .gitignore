@@ -25,3 +25,13 @@ yarn-error.log*
 .docz
 .eslintcache
 .vscode
+
+yarn.lock
+
+.yarn
+
+.yarnrc.yml
+
+.env
+
+

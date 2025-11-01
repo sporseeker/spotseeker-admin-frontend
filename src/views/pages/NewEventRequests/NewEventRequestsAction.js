@@ -7,12 +7,33 @@ import BasicDetails from './NewEventRequestsActionSteps/BasicDetails'
 import PackageDetails from './NewEventRequestsActionSteps/PackageDetails'
 import PromotionDetails from './NewEventRequestsActionSteps/PromotionDetails'
 import Settings from './NewEventRequestsActionSteps/Settings'
+import Features from './NewEventRequestsActionSteps/Features'
+import PaymentGateway from './NewEventRequestsActionSteps/PaymentGateway'
+import AnalyticsSettings from './NewEventRequestsActionSteps/AnalyticsSettings'
 
 const NewEventRequests = () => {
     const ref = useRef(null)
+    const [pgs] = useState([
+  {
+    id: 1,
+    name: "PayPal",
+    commission_rate: 2.9,
+    apply_handling_fee: true
+  },
+  {
+    id: 2,
+    name: "Stripe",
+    commission_rate: 2.9,
+    apply_handling_fee: true
+  }
+
+]
+
+)
+
 
 const [stepper, setStepper] = useState(null)
-  const [productData] = useImmer({
+  const [productData, setProductData] = useImmer({
     name: "",
     description: "",
     organizer: "",
@@ -102,7 +123,28 @@ const [stepper, setStepper] = useState(null)
     ],
     analytics_ids: []
   })
-  const steps = [
+
+
+    const handlePromotionStatus = (index, value, type) => {
+    if (index !== null) {
+      setProductData((product) => {
+        product.invoice[index][type] = value
+      })
+    } else {
+      setProductData((product) => {
+        product[type] = value
+      })
+    }
+  }
+
+
+   const handleAnalyticsChange = (analytics) => {
+    setProductData((product) => ({
+      ...product,
+      analytics_ids: analytics
+    }))
+  }
+const steps = [
     {
       id: "basic-details",
       title: "Basic Details",
@@ -173,55 +215,55 @@ const [stepper, setStepper] = useState(null)
         //   handlePromotionStatus={handlePromotionStatus}
         />
       )
+    },
+    {
+      id: "features-details",
+      title: "Features",
+      content: (
+        <Features
+          stepper={stepper}
+          type="wizard-vertical"
+          // handleChange={handleChange}
+          productData={productData}
+          // handleInvitationPackageAdd={handleInvitationPackageAdd}
+          // handleInvitationPackageRemove={handleInvitationPackageRemove}
+          handlePromotionStatus={handlePromotionStatus}
+          // handleDropdownChange={handleDropdownChange}
+          // submitHandler={submitHandler}
+          // handleAddonAdd={handleAddonAdd}
+          // handleAddonRemove={handleAddonRemove}
+          // handleAddonInputChange={handleAddonInputChange}
+        />
+      )
+    },
+    {
+      id: "payment-details",
+      title: "Payment Methods",
+      content: (
+        <PaymentGateway
+          stepper={stepper}
+          type="wizard-vertical"
+          // handleChange={handleChange}
+          productData={productData}
+          // handlePromotionStatus={handlePromotionStatus}
+          // handlePaymentGatewayActive={handlePaymentGatewayActive}
+          pgs={pgs}
+        />
+      )
+    },
+    {
+      id: "analytics",
+      title: "Analytics",
+      content: (
+        <AnalyticsSettings
+          stepper={stepper}
+          type="wizard-vertical"
+          // handleChange={handleChange}
+          productData={productData}
+          setAnalytics={handleAnalyticsChange}
+        />
+      )
     }
-    // {
-    //   id: "features-details",
-    //   title: "Features",
-    //   content: (
-    //     <Features
-    //       stepper={stepper}
-    //       type="wizard-vertical"
-    //       handleChange={handleChange}
-    //       productData={productData}
-    //       handleInvitationPackageAdd={handleInvitationPackageAdd}
-    //       handleInvitationPackageRemove={handleInvitationPackageRemove}
-    //       handlePromotionStatus={handlePromotionStatus}
-    //       handleDropdownChange={handleDropdownChange}
-    //       submitHandler={submitHandler}
-    //       handleAddonAdd={handleAddonAdd}
-    //       handleAddonRemove={handleAddonRemove}
-    //       handleAddonInputChange={handleAddonInputChange}
-    //     />
-    //   )
-    // },
-    // {
-    //   id: "payment-details",
-    //   title: "Payment Methods",
-    //   content: (
-    //     <PaymentGateway
-    //       stepper={stepper}
-    //       type="wizard-vertical"
-    //       handleChange={handleChange}
-    //       productData={productData}
-    //       handlePromotionStatus={handlePromotionStatus}
-    //       handlePaymentGatewayActive={handlePaymentGatewayActive}
-    //       pgs={pgs}
-    //     />
-    //   )
-    // },
-    // {
-    //   id: "analytics",
-    //   title: "Analytics",
-    //   content: (
-    //     <AnalyticsSettings
-    //       stepper={stepper}
-    //       type="wizard-vertical"
-    //       handleChange={handleChange}
-    //       productData={productData}
-    //       setAnalytics={handleAnalyticsChange}
-    //     />
-    //   )
-    // }
   ]
 
     const submitHandler = () => { }
