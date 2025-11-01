@@ -221,16 +221,28 @@ export const paymentStatuses = [
 
 export const eventStatuses = [
   {
+    value: 'draft',
+    label: "Draft"
+  },
+  {
     value: 'pending',
     label: "Pending"
+  },
+  {
+    value: 'ongoing',
+    label: "Ongoing"
   },
   {
     value: 'complete',
     label: "Complete"
   },
   {
-    value: 'failed',
-    label: "Failed"
+    value: 'presale',
+    label: "Pre-sale"
+  },
+  {
+    value: 'soldout',
+    label: "Sold Out"
   },
   {
     value: 'cancelled',
@@ -243,10 +255,6 @@ export const eventStatuses = [
   {
     value: 'postponed',
     label: "Postponed"
-  },
-  {
-    value: 'ongoing',
-    label: "On going"
   }
 ]
 

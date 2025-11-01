@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import {
   Card,
   CardHeader,
@@ -19,19 +19,23 @@ import SpinnerComponent from '../../../@core/components/spinner/Fallback-spinner
 import EventRequestsService from '@services/EventRequestsService'
 
 // ** Actions Dropdown Component
-const ActionsDropdown = ({ row, isLastRow = false }) => {
+const ActionsDropdown = ({ isLastRow = false }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   const toggle = () => setDropdownOpen(prevState => !prevState)
 
-  const handleEdit = () => {
-    // navigate to the action page for editing
-    navigate('/event-requests/action')
-  }
+  // const handleEdit = () => {
+  //   // navigate to the action page for editing with event data
+  //   navigate('/event-requests/action', { 
+  //     state: { 
+  //       eventData: row,
+  //       isEdit: true 
+  //     } 
+  //   })
+  // }
 
   const handleDelete = () => {
-    console.log('Delete clicked for row:', row)
     // Add delete logic here
   }
 
@@ -54,7 +58,7 @@ const ActionsDropdown = ({ row, isLastRow = false }) => {
           <MoreVertical size={20} color="#000000" />
         </DropdownToggle>
         <DropdownMenu style={{ minWidth: '120px', width: '100%' }}>
-          <DropdownItem
+          {/* <DropdownItem
             onClick={handleEdit}
             style={{
               display: 'flex',
@@ -65,7 +69,7 @@ const ActionsDropdown = ({ row, isLastRow = false }) => {
           >
             <Edit size={14} style={{ marginRight: '8px' }} />
             Edit
-          </DropdownItem>
+          </DropdownItem> */}
           <DropdownItem
             onClick={handleDelete}
             style={{
@@ -108,7 +112,6 @@ const EventRequests = () => {
       setPending(true)
       const response = await EventRequestsService.getAllEventOrganizersAdmin(page, limit)
 
-      console.log("Fetched event data:", response)
       const eventsArray = response.data.events || response.data || []
       setEventData(eventsArray)
       setTotalRecords(response.data.total || 0)
@@ -131,7 +134,6 @@ const EventRequests = () => {
       
       const response = await EventRequestsService.getAllEventOrganizersAdmin(0, totalRecords)
       
-      console.log("Fetched all event data for CSV:", response)
       const allEventsArray = response.data.events || response.data || []
       return allEventsArray
     } catch (error) {
@@ -229,21 +231,41 @@ const EventRequests = () => {
         let text = 'Unknown'
 
         switch (row.status) {
+          case 'draft':
+            backgroundColor = '#B8C2CC'
+            text = 'Draft'
+            break
           case 'pending':
             backgroundColor = '#FF9F43' 
             text = 'Pending'
             break
-          case 'approved':
+          case 'ongoing':
+            backgroundColor = '#00CFE8'
+            text = 'Ongoing'
+            break
+          case 'complete':
             backgroundColor = '#28C76F' 
-            text = 'Approved'
+            text = 'Complete'
             break
-          case 'rejected':
+          case 'presale':
+            backgroundColor = '#7367F0'
+            text = 'Pre-sale'
+            break
+          case 'soldout':
+            backgroundColor = '#EA5455'
+            text = 'Sold Out'
+            break
+          case 'cancelled':
             backgroundColor = '#EA5455' 
-            text = 'Rejected'
+            text = 'Cancelled'
             break
-          case 'completed':
-            backgroundColor = '#00CFE8' 
-            text = 'Completed'
+          case 'closed':
+            backgroundColor = '#82868B'
+            text = 'Closed'
+            break
+          case 'postponed':
+            backgroundColor = '#FF9F43'
+            text = 'Postponed'
             break
           default:
             backgroundColor = '#82868B'

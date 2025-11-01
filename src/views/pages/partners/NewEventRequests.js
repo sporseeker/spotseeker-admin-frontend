@@ -26,12 +26,16 @@ const ActionsDropdown = ({ row, isLastRow = false }) => {
   const toggle = () => setDropdownOpen(prevState => !prevState)
 
   const handleEdit = () => {
-    // navigate to the action page for editing
-    navigate('/new-event-requests/action')
+    // navigate to the action page for editing with event data
+    navigate('/new-event-requests/action', { 
+      state: { 
+        eventData: row,
+        isEdit: true 
+      } 
+    })
   }
 
   const handleDelete = () => {
-    console.log('Delete clicked for row:', row)
     // Add delete logic here
   }
 
@@ -108,7 +112,6 @@ const NewEventRequests = () => {
       setPending(true)
       const response = await EventRequestsService.getAllEventOrganizersAdmin(page, limit)
 
-      console.log("Fetched event data:", response)
       const eventsArray = response.data.events || response.data || []
       setEventData(eventsArray)
       setTotalRecords(response.data.total || 0)
@@ -131,7 +134,6 @@ const NewEventRequests = () => {
       
       const response = await EventRequestsService.getAllEventOrganizersAdmin(0, totalRecords)
       
-      console.log("Fetched all event data for CSV:", response)
       const allEventsArray = response.data.events || response.data || []
       return allEventsArray
     } catch (error) {
@@ -205,21 +207,41 @@ const NewEventRequests = () => {
         let text = 'Unknown'
 
         switch (row.status) {
+          case 'draft':
+            backgroundColor = '#B8C2CC'
+            text = 'Draft'
+            break
           case 'pending':
             backgroundColor = '#FF9F43' 
             text = 'Pending'
             break
-          case 'approved':
+          case 'ongoing':
+            backgroundColor = '#00CFE8'
+            text = 'Ongoing'
+            break
+          case 'complete':
             backgroundColor = '#28C76F' 
-            text = 'approved'
+            text = 'Complete'
             break
-          case 'sent back':
-            backgroundColor = '#FF5722' 
-            text = 'Sent Back'
+          case 'presale':
+            backgroundColor = '#7367F0'
+            text = 'Pre-sale'
             break
-          case 'rejected':
+          case 'soldout':
+            backgroundColor = '#EA5455'
+            text = 'Sold Out'
+            break
+          case 'cancelled':
             backgroundColor = '#EA5455' 
-            text = 'Rejected'
+            text = 'Cancelled'
+            break
+          case 'closed':
+            backgroundColor = '#82868B'
+            text = 'Closed'
+            break
+          case 'postponed':
+            backgroundColor = '#FF9F43'
+            text = 'Postponed'
             break
           default:
             backgroundColor = '#82868B'

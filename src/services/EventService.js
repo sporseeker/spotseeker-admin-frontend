@@ -168,6 +168,14 @@ class EventService {
   getInvitations(event_id) {
     return TMApi.get(`${url}/getInvitations/${event_id}`)
   }
+
+  reviewEvent(eventId, reviewData) {
+    return TMApi.post(`/api/admin/events/${eventId}/review`, reviewData, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
 }
 
 export default new EventService()

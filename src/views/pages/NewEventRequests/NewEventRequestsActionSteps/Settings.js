@@ -18,7 +18,6 @@ import {
 const Settings = ({
   handleChange,
   productData,
-  handlePromotionStatus,
   stepper
 }) => {
   const [handling_cost_perc, set_handling_cost_perc] = useState(
@@ -46,9 +45,12 @@ const Settings = ({
     <Fragment>
       {productData !== null ? (
         <Form>
+          <Col md={4}>
+            <h4 style={{ fontSize: '20px', marginBottom: '20px' }}>Settings</h4>
+          </Col>
           <Row>
             <Col md="6" className="mb-1">
-              <Label className="form-label" for="handling_cost">
+              <Label className="form-label" for="handling_cost" style={{ fontSize: '16px' }}>
                 Handling cost (Amount or Percentage)
               </Label>
               <Input
@@ -61,20 +63,15 @@ const Settings = ({
             <Col md="6" className="mb-1">
               <Row>
                 <Col md={6} className="mb-md-0 mb-1">
-                <Label className="form-label" for="handling_cost_perc">
+                <Label className="form-label" for="handling_cost_perc" style={{ fontSize: '16px' }}>
                     Handling cost is percentage
                   </Label>
-                  <div className="form-switch form-check-success">
+                  <div className="form-switch form-check-success" style={{ cursor: 'not-allowed', pointerEvents: 'none' }}>
                     <Input
                       type="switch"
                       id={`handling_cost_perc`}
                       name={`handling_cost_perc`}
-                      onChange={(e) =>                        handlePromotionStatus(
-                          null,
-                          e.target.checked,
-                          "handling_cost_perc"
-                        )
-                      }
+                      readOnly
                       defaultChecked={handling_cost_perc}
                       checked={handling_cost_perc}
                     />

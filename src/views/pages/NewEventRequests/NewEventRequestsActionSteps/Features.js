@@ -143,6 +143,9 @@ const Features = ({
     <Fragment>
       {productData !== null ? (
         <Form>
+          <Col md={4}>
+            <h4 style={{ fontSize: '20px', marginBottom: '20px' }}>Features</h4>
+          </Col>
           <Row>
             <Col md="12" className="mb-1">
               <Row>
@@ -179,7 +182,8 @@ const Features = ({
                             <Col md={4} className="mb-md-0 mb-1">
                               <Label
                                 className="form-label"
-                                for={`addonName-${i}`}>
+                                for={`addonName-${i}`}
+                                style={{ fontSize: '16px' }}>
                                 Addon Name
                               </Label>
                               <Input
@@ -193,7 +197,8 @@ const Features = ({
                             <Col md={4}>
                               <Label
                                 className="form-label"
-                                for={`addonPrice-${i}`}>
+                                for={`addonPrice-${i}`}
+                                style={{ fontSize: '16px' }}>
                                 Price
                               </Label>
                               <Input
@@ -207,7 +212,8 @@ const Features = ({
                             <Col md={4}>
                               <Label
                                 className="form-label"
-                                for={`addonCategory-${i}`}>
+                                for={`addonCategory-${i}`}
+                                style={{ fontSize: '16px' }}>
                                 Category
                               </Label>
                               <Select
@@ -227,7 +233,7 @@ const Features = ({
                           <Row className=" align-items-center py-2">
                             <Col md={4} className="d-flex align-items-center">
                               <div className="w-100">
-                                <Label className='form-label' for={`addonImage-${i}`}>
+                                <Label className='form-label' for={`addonImage-${i}`} style={{ fontSize: '16px' }}>
                                   Addon Image
                                 </Label>
                                 <div className="d-flex align-items-center">
@@ -329,7 +335,8 @@ const Features = ({
                             <Col md={4} className="mb-md-0 mb-1">
                               <Label
                                 className="form-label"
-                                for={`packageName-${i}`}>
+                                for={`packageName-${i}`}
+                                style={{ fontSize: '16px' }}>
                                 Package Name
                               </Label>
                               <Input
@@ -344,7 +351,8 @@ const Features = ({
                             <Col md={4}>
                               <Label
                                 className="form-label"
-                                for={`packageDesc-${i}`}>
+                                for={`packageDesc-${i}`}
+                                style={{ fontSize: '16px' }}>
                                 Description
                               </Label>
                               <Input
@@ -359,7 +367,8 @@ const Features = ({
                             <Col md={4}>
                               <Label
                                 className="form-label"
-                                for={`packageFreeSeating-${i}`}>
+                                for={`packageFreeSeating-${i}`}
+                                style={{ fontSize: '16px' }}>
                                 Free Seating
                               </Label>
                               <Select
@@ -380,7 +389,8 @@ const Features = ({
                             <Col md={4} className="mb-md-0 mb-1">
                               <Label
                                 className="form-label"
-                                for={`packageAvailQty-${i}`}>
+                                for={`packageAvailQty-${i}`}
+                                style={{ fontSize: '16px' }}>
                                 Quantity
                               </Label>
                               <Input
@@ -399,7 +409,7 @@ const Features = ({
                             </Col>
 
                             <Col md={4}>
-                              <Label className="form-label" for={`active-${i}`}>
+                              <Label className="form-label" for={`active-${i}`} style={{ fontSize: '16px' }}>
                                 Active
                               </Label>
                               <Select
@@ -439,7 +449,8 @@ const Features = ({
                                 <Col md={12}>
                                   <Label
                                     className="form-label"
-                                    for={`packageAllocSeats-${i}`}>
+                                    for={`packageAllocSeats-${i}`}
+                                    style={{ fontSize: '16px' }}>
                                     Allocated Seats
                                   </Label>
                                   <Input
