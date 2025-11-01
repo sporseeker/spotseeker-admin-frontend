@@ -174,16 +174,16 @@
   }
 
   // Fix focus styling for input groups - apply to entire field consistently
-  .input-group:focus-within .input-group-text,
-  .input-group:hover .input-group-text {
+  .input-group:not(.read-only-input-group):focus-within .input-group-text,
+  .input-group:not(.read-only-input-group):hover .input-group-text {
     border-top-color: #EA5455 !important; 
     border-right-color: #EA5455 !important; 
     border-bottom-color: #EA5455 !important; 
     border-left-color: #EA5455 !important; 
   }
 
-  .input-group:focus-within .form-control,
-  .input-group:hover .form-control {
+  .input-group:not(.read-only-input-group):focus-within .form-control,
+  .input-group:not(.read-only-input-group):hover .form-control {
     border-color: #EA5455 !important; 
     box-shadow: none !important; 
   }
@@ -197,5 +197,23 @@
     border-bottom-color: #EA5455 !important;
     border-left-color: #EA5455 !important;
     box-shadow: none !important;
+  }
+
+  // Read-only input styles - override focus borders
+  .read-only-input-group:focus-within .input-group-text,
+  .read-only-input-group:focus-within .form-control,
+  .read-only-input-group .read-only-input:focus {
+    border-color: #d8d6de !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
+  .read-only-input-group:hover .input-group-text,
+  .read-only-input-group:hover .form-control {
+    border-color: #d8d6de !important;
+  }
+
+  .read-only-input {
+    caret-color: transparent !important;
   }
 }
